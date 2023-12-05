@@ -1,0 +1,91 @@
+{
+  "fs": {
+    "id": "fs",
+    "type": "builtin",
+    "importer": [
+      "{es.tsx}"
+    ],
+    "import": null
+  },
+  "path": {
+    "id": "path",
+    "type": "builtin",
+    "importer": [
+      "{es.tsx}"
+    ],
+    "import": null
+  },
+  "os": {
+    "id": "os",
+    "type": "builtin",
+    "importer": [
+      "{es.tsx}"
+    ],
+    "import": null
+  },
+  "{es.tsx}": {
+    "id": "{es.tsx}",
+    "type": "local",
+    "importer": null,
+    "import": [
+      {
+        "id": "{react}",
+        "type": "static",
+        "ident": [{
+          "name": "default",
+          "as": "React"
+        }]
+      },
+      {
+        "id": "fs",
+        "type": "static",
+        "ident": [
+          {
+            "name": "read",
+            "as": "read"
+          }
+        ]
+      },
+      {
+        "id": "path",
+        "type": "static",
+        "ident": [{
+          "name": "*",
+          "as": "Path"
+        }]
+      },
+      {
+        "id": "os",
+        "type": "static",
+        "ident": [{
+          "name": "default",
+          "as": "os"
+        }]
+      },
+      {
+        "id": "{semver}",
+        "type": "static",
+        "ident": [{
+          "name": "parse",
+          "as": "parse"
+        }]
+      }
+    ]
+  },
+  "{semver}": {
+    "id": "{semver}",
+    "import": null,
+    "importer": [
+      "{es.tsx}"
+    ],
+    "type": "node_modules"
+  },
+  "{react}": {
+    "id": "{react}",
+    "import": null,
+    "importer": [
+      "{es.tsx}"
+    ],
+    "type": "node_modules"
+  }
+}

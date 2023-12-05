@@ -1,0 +1,25 @@
+[package]
+name = "swc_parser"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+swc = "0.269.82"
+swc_common = {version = "0.33.10", features = ["tty-emitter"]}
+swc_core =  { version = "0.86.93", features = [
+  "allocator_node",
+  "ecma_ast",
+  "ecma_codegen",
+  "ecma_ast_serde",
+  "common_concurrent",
+  "bundler",
+  "ecma_loader",
+  "ecma_transforms",
+  "ecma_visit",
+  "ecma_parser",
+  "base_node",
+  "base_concurrent"
+] }
+swc_ecmascript = { version = "0.236.85", features = ["transforms", "visit", "parser"] }

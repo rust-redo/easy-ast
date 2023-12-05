@@ -1,0 +1,13 @@
+{
+  "name": "easy-ast.benchmark",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "bench": "node index.mjs"
+  },
+  "devDependencies": {
+    "easy-ast.import": "workspace:*",
+    "tinybench": "^2.5.1"
+  }
+}

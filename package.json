@@ -1,0 +1,22 @@
+{
+  "name": "easy-ast",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bench": "pnpm --filter \"*bench*\" run bench",
+    "build:npm": "pnpm --filter \"{packages/**}\" run build",
+    "install:test": "cd packages/import/__test__/fixture/code && npm i",
+    "parse": "it",
+    "postinstall": "pnpm repos && pnpm install:test",
+    "repos": "node scripts/git-repo.mjs",
+    "test": "pnpm --filter \"{packages/**}\" run test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "debug": "^4.3.1",
+    "simple-git": "^3.20.0"
+  }
+}

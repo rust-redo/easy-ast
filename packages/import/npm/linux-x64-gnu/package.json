@@ -1,0 +1,21 @@
+{
+  "name": "easy-ast.import-linux-x64-gnu",
+  "version": "0.0.0",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "easy-ast.import.linux-x64-gnu.node",
+  "files": [
+    "easy-ast.import.linux-x64-gnu.node"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  },
+  "libc": [
+    "glibc"
+  ]
+}
