@@ -2,7 +2,7 @@
 
 Fast APIs for scanning and transforming js-ast.
 
-- [`easy-ast.import`](/packages/import/README.md)
+[`easy-ast.import`](/packages/import/README.md)
 
 ## Architecture
 
