@@ -11,7 +11,7 @@ const repos = [
 
 function statis(name, map, depth) {
   const modules = Object.keys(map)
-  console.log(`${name}, parsed files: ${modules.filter(m => map[m].type === 'local').length},  total modules: ${modules.length}, total links: ${modules.reduce((acc, file) => {
+  console.log(`${name}, parsed files: ${modules.filter(m => map[m].type === 'internal').length},  total modules: ${modules.length}, total links: ${modules.reduce((acc, file) => {
     return acc + (map[file].import?.length ?? 0)
   }, 0)}, depth: ${depth}`)
 }

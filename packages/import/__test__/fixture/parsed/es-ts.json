@@ -17,7 +17,7 @@
   },
   "{es.ts}": {
     "id": "{es.ts}",
-    "type": "local",
+    "type": "internal",
     "importer": null,
     "import": [
       {

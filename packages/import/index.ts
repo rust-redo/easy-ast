@@ -4,8 +4,8 @@ import {Parser as CoreParser} from './core'
 
 export enum ImportNodeType {
   BUILTIN = 'builtin',
-  LOCAL = 'local',
-  NODE_MODULES = 'node_modules'
+  INTERNAL = 'internal',
+  EXTERNAL = 'external'
 }
 export interface ImportNode {
   id: string

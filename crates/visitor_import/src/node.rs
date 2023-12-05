@@ -91,12 +91,12 @@ pub enum ImportLinkKind {
 #[derive(Serialize, Debug, Default, Clone, PartialEq, Eq)]
 pub enum ImportNodeKind {
   #[default]
-  #[serde(rename = "local")]
-  Local,
+  #[serde(rename = "internal")]
+  Internal,
   #[serde(rename = "builtin")]
   Builtin,
-  #[serde(rename = "node_modules")]
-  NodeModules,
+  #[serde(rename = "external")]
+  External,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -127,10 +127,10 @@ impl ImportNodeKind {
     }
 
     if id.contains("node_modules/") || !in_root {
-      return ImportNodeKind::NodeModules;
+      return ImportNodeKind::External;
     }
 
-    ImportNodeKind::Local
+    ImportNodeKind::Internal
   }
 }
 
@@ -190,7 +190,7 @@ impl ImportNodeMap {
       }
 
       // add new paths to internal module
-      if (*module_node).kind == ImportNodeKind::Local {
+      if (*module_node).kind == ImportNodeKind::Internal {
         (*module_node)
           .import_paths
           .extend((*root_node).import_paths.iter().map(|paths| {

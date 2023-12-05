@@ -25,7 +25,7 @@
   },
   "{es.tsx}": {
     "id": "{es.tsx}",
-    "type": "local",
+    "type": "internal",
     "importer": null,
     "import": [
       {
@@ -78,7 +78,7 @@
     "importer": [
       "{es.tsx}"
     ],
-    "type": "node_modules"
+    "type": "external"
   },
   "{react}": {
     "id": "{react}",
@@ -86,6 +86,6 @@
     "importer": [
       "{es.tsx}"
     ],
-    "type": "node_modules"
+    "type": "external"
   }
 }

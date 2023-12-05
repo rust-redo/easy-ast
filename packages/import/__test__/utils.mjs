@@ -28,7 +28,7 @@ export const validateParsed = (t, parsed, files) => {
   files.forEach(file => {
     t.truthy(parsed[file], `${file} not parsed`)
   })
-  t.is(files.length, Object.values(parsed).filter(item => item.type==='local').length)
+  t.is(files.length, Object.values(parsed).filter(item => item.type==='internal').length)
 
   for(let id in parsed) {
     if(parsed[id].importer?.length) {

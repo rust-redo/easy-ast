@@ -25,7 +25,7 @@
     },
     "{resolve.js}": {
       "id": "{resolve.js}",
-      "type": "local",
+      "type": "internal",
       "importer": null,
       "import": [
         {
@@ -86,7 +86,7 @@
       "importer": [
         "{resolve.js}"
       ],
-      "type": "node_modules"
+      "type": "external"
     },
     "{bar.js}": {
       "id": "{bar.js}",
@@ -103,7 +103,7 @@
       "importer": [
         "{resolve.js}"
       ],
-      "type": "local"
+      "type": "internal"
     },
     "{foo.js}": {
       "id": "{foo.js}",
@@ -112,6 +112,6 @@
         "{resolve.js}",
         "{bar.js}"
       ],
-      "type": "local"
+      "type": "internal"
     }
   }

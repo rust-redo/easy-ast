@@ -10,8 +10,8 @@ const core_1 = require("./core");
 var ImportNodeType;
 (function (ImportNodeType) {
     ImportNodeType["BUILTIN"] = "builtin";
-    ImportNodeType["LOCAL"] = "local";
-    ImportNodeType["NODE_MODULES"] = "node_modules";
+    ImportNodeType["INTERNAL"] = "internal";
+    ImportNodeType["EXTERNAL"] = "external";
 })(ImportNodeType || (exports.ImportNodeType = ImportNodeType = {}));
 var ImportLinkType;
 (function (ImportLinkType) {

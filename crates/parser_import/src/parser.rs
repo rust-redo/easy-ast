@@ -78,7 +78,7 @@ impl Parser {
         self.swc.parse_file(&resolved_file, visitor);
 
         for (id, node) in &visitor.import_node.map {
-          if processed_ids.contains_key(&id.clone()) || node.kind != ImportNodeKind::Local {
+          if processed_ids.contains_key(&id.clone()) || node.kind != ImportNodeKind::Internal {
             continue;
           }
           next_count += 1;
