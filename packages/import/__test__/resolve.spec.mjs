@@ -1,5 +1,5 @@
 import test from 'ava'
-import { getCodeFile, parser, readParsedFile } from './utils.mjs'
+import { parser, readParsedFile } from './utils.mjs'
 
 test('should parse with resolve and recursion', (t) => {
   const importJson =  readParsedFile(

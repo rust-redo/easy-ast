@@ -31,8 +31,10 @@
       {
         "id": "fs",
         "type": "static",
+        "typeOnly": false,
         "ident": [
           {
+            "isType": false,
             "name": "read",
             "as": "read"
           }
@@ -41,7 +43,9 @@
       {
         "id": "path",
         "type": "static",
+        "typeOnly": false,
         "ident": [{
+          "isType": false,
           "name": "*",
           "as": "Path"
         }]
@@ -49,7 +53,9 @@
       {
         "id": "os",
         "type": "static",
+        "typeOnly": false,
         "ident": [{
+          "isType": false,
           "name": "default",
           "as": "os"
         }]

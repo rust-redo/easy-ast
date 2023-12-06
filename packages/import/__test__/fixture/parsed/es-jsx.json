@@ -31,25 +31,31 @@
       {
         "id": "{react}",
         "type": "static",
+        "typeOnly": false,
         "ident": [{
           "name": "default",
-          "as": "React"
+          "as": "React",
+          "isType": false
         }]
       },
       {
         "id": "fs",
         "type": "static",
+        "typeOnly": false,
         "ident": [
           {
             "name": "read",
-            "as": "read"
+            "as": "read",
+            "isType": false
           }
         ]
       },
       {
         "id": "path",
         "type": "static",
+        "typeOnly": false,
         "ident": [{
+          "isType": false,
           "name": "*",
           "as": "Path"
         }]
@@ -57,7 +63,9 @@
       {
         "id": "os",
         "type": "static",
+        "typeOnly": false,
         "ident": [{
+          "isType": false,
           "name": "default",
           "as": "os"
         }]
@@ -65,7 +73,9 @@
       {
         "id": "{semver}",
         "type": "static",
+        "typeOnly": false,
         "ident": [{
+          "isType": false,
           "name": "parse",
           "as": "parse"
         }]

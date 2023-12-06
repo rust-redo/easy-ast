@@ -1,12 +1,12 @@
 use std::sync::Arc;
 
 use swc_parser::{
-  ast::{ImportDecl, ImportSpecifier},
+  ast::{ExportAll, ImportDecl, ImportSpecifier as SwcImportSpecifier, ExportNamedSpecifier, ModuleDecl, NamedExport},
   visit::{noop_visit_type, Visit},
 };
 
 use crate::{
-  node::{self, ImportLink, ImportLinkKind, ImportNode, ImportNodeKind, ImportNodeMap},
+  node::{self, ImportLink, ImportLinkKind, ImportNode, ImportNodeKind, ImportNodeMap, ImportSpecifier},
   resolver::ImportResolver,
 };
 
@@ -48,9 +48,14 @@ impl ImportVisitor {
     }
   }
 
-  fn insert_process_node_depent(&mut self, module: ImportNode) -> &mut ImportNode {
+  fn insert_process_node_depent(&mut self, src: &[u8]) -> (Arc<String>, &mut ImportNode) {
     let process_id = self.process_id.clone().unwrap();
-    self.import_node.insert_node_depend(&process_id, module)
+    let module_node = self.resolve_from_process_id(&String::from_utf8_lossy(src));
+    let module_id = module_node.id.clone();
+    (
+      module_id,
+      self.import_node.insert_node_depend(&process_id, module_node),
+    )
   }
 }
 
@@ -64,40 +69,32 @@ impl Visit for ImportVisitor {
   // }
 
   fn visit_import_decl(&mut self, import: &ImportDecl) {
-    if import.type_only {
-      return;
-    }
-
-    let module_node =
-      self.resolve_from_process_id(&String::from_utf8_lossy(&import.src.value.as_bytes()));
-    let module_id = module_node.id.clone();
-    let process_node = self.insert_process_node_depent(module_node);
+    let (module_id, process_node) = self.insert_process_node_depent(&import.src.value.as_bytes());
 
     let imports = process_node.import.as_mut().unwrap();
-    let mut ident: Vec<node::ImportSpecifier> = vec![];
+    let mut ident: Vec<ImportSpecifier> = vec![];
     for spec in import.specifiers.iter() {
       match spec {
-        ImportSpecifier::Named(ref named_spec) => {
-          if named_spec.is_type_only {
-            continue;
-          }
-
-          let name = named_spec.local.sym.to_string();
-          ident.push(node::ImportSpecifier {
+        SwcImportSpecifier::Named(ref named_spec) => {
+          let name = Arc::new(named_spec.local.sym.to_string());
+          ident.push(ImportSpecifier {
             name: name.clone(),
             _as: name,
+            is_type: named_spec.is_type_only
           });
         }
-        ImportSpecifier::Default(ref default_spec) => {
-          let _as = default_spec.local.sym.to_string();
-          ident.push(node::ImportSpecifier {
-            name: "default".into(),
+        SwcImportSpecifier::Default(ref default_spec) => {
+          let _as = Arc::new(default_spec.local.sym.to_string());
+          ident.push(ImportSpecifier {
+            name: Arc::new("default".into()),
             _as,
+            is_type: false
           })
         }
-        ImportSpecifier::Namespace(ref namespace) => ident.push(node::ImportSpecifier {
-          name: "*".into(),
-          _as: namespace.local.sym.to_string(),
+        SwcImportSpecifier::Namespace(ref namespace) => ident.push(ImportSpecifier {
+          name: Arc::new("*".into()),
+          _as: Arc::new(namespace.local.sym.to_string()),
+          is_type: false
         }),
       }
     }
@@ -106,12 +103,40 @@ impl Visit for ImportVisitor {
       id: module_id,
       kind: ImportLinkKind::Static,
       ident,
+      type_only: import.type_only
     });
 
     // println!("serde {}", serde_json::to_string(&self.import_node.import).unwrap());
     // dbg!(&import.specifiers);
   }
 
+  fn visit_export_all(&mut self, export: &ExportAll) {
+    if export.type_only {
+      return;
+    }
+    let (module_id, process_node) = self.insert_process_node_depent(&export.src.value.as_bytes());
+    let imports = process_node.import.as_mut().unwrap();
+    let name: Arc<String> = Arc::new("*".into());
+    let ident: Vec<ImportSpecifier> = vec![ImportSpecifier {name: name.clone(), _as: name, is_type: false}];
+
+    imports.push(ImportLink {
+      id: module_id,
+      kind: ImportLinkKind::Static,
+      ident,
+      type_only: false
+    });
+  }
+
+  fn visit_named_export(&mut self, export: &NamedExport) {
+    if export.type_only {
+      return;
+    }
+
+    // dbg!(export);
+  }
+  // fn visit_export_decl(&mut self, export: &ExportDecl){
+  //   println!("{:?}", export);
+  // }
   // fn visit_mut_ts_import_equals_decl(&mut self, import: &mut TsImportEqualsDecl) {
   //   dbg!(&import.id);
   //   dbg!(&import.module_ref);

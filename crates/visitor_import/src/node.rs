@@ -1,6 +1,6 @@
 use std::{
   collections::{HashMap, HashSet},
-  sync::Arc,
+  sync::Arc, default,
 };
 
 use serde::Serialize;
@@ -73,19 +73,22 @@ pub const BUILTINS: &[&str] = &[
   "zlib",
 ];
 
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 pub struct ImportSpecifier {
-  pub name: String,
+  pub name: Arc<String>,
   #[serde(rename = "as")]
-  pub _as: String,
+  pub _as: Arc<String>,
+  #[serde(rename = "isType")]
+  pub is_type: bool
 }
 
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 #[serde(rename_all = "camelCase")]
 pub enum ImportLinkKind {
+  #[default]
   Static,
   Dynamic,
-  Require,
+  Require
 }
 
 #[derive(Serialize, Debug, Default, Clone, PartialEq, Eq)]
@@ -99,13 +102,15 @@ pub enum ImportNodeKind {
   External,
 }
 
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct ImportLink {
   pub id: Arc<String>,
   #[serde(rename = "type")]
   pub kind: ImportLinkKind,
   pub ident: Vec<ImportSpecifier>,
+  #[serde(rename = "typeOnly")]
+  pub type_only: bool
 }
 
 #[derive(Serialize, Debug, Default, Clone)]
