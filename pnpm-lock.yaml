@@ -17,7 +17,7 @@ importers:
 
   benchmark:
     devDependencies:
-      easy-ast.import:
+      easy-ast.graph:
         specifier: workspace:*
         version: link:../packages/import
       tinybench:

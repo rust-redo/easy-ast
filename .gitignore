@@ -136,10 +136,10 @@ dist
 **/__test__/**/*lock.json
 
 # npm build
-packages/import/core.js
-packages/import/core.d.ts
-packages/import/index.d.ts
-packages/import/index.js
+packages/*/core.js
+packages/*/core.d.ts
+packages/*/index.d.ts
+packages/*/index.js
 
 # external git repo
 repos

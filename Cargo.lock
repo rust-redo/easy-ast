@@ -368,13 +368,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "56ce8c6da7551ec6c462cbaf3bfbc75131ebbfa1c944aeaa9dab51ca1c5f0c3b"
 
 [[package]]
-name = "easy_ast_import"
+name = "easy_ast_graph"
 version = "0.0.0"
 dependencies = [
  "napi",
  "napi-build",
  "napi-derive",
- "parser_import",
+ "parser",
  "serde_json",
  "visitor_import",
 ]
@@ -931,7 +931,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "parser_import"
+name = "parser"
 version = "0.1.0"
 dependencies = [
  "serde",

@@ -1,0 +1,15 @@
+{
+  "name": "easy-ast.graph-darwin-universal",
+  "version": "0.0.0",
+  "os": [
+    "darwin"
+  ],
+  "main": "easy-ast.graph.darwin-universal.node",
+  "files": [
+    "easy-ast.graph.darwin-universal.node"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  }
+}

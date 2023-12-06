@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { Parser } from 'easy-ast.import'
+import { Parser } from 'easy-ast.graph'
 import { Bench } from 'tinybench';
 
 const repos = [

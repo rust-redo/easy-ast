@@ -7,7 +7,7 @@
     "bench": "node index.mjs"
   },
   "devDependencies": {
-    "easy-ast.import": "workspace:*",
+    "easy-ast.graph": "workspace:*",
     "tinybench": "^2.5.1"
   }
 }
