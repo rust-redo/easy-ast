@@ -3,11 +3,19 @@
   "version": "0.0.0",
   "main": "index.js",
   "types": "index.d.ts",
+  "description": "Fast APIs for js/ts module graph.",
   "files": [
     "core.js",
     "core.d.ts",
     "index.js",
     "index.d.ts"
+  ],
+  "keywords": [
+    "ast",
+    "swc",
+    "swc-plugin",
+    "bundler",
+    "easy-ast"
   ],
   "napi": {
     "name": "easy-ast.graph",
