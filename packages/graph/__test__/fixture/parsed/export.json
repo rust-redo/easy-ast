@@ -1,0 +1,100 @@
+{
+  "nested/bar.js": {
+    "id": "nested/bar.js",
+    "type": "internal",
+    "importer": [
+      "export.ts"
+    ],
+    "import": [
+      {
+        "id": "nested/foo.js",
+        "type": "static",
+        "ident": [
+          {
+            "name": "foo",
+            "as": "foo",
+            "isType": false
+          }
+        ],
+        "typeOnly": false
+      }
+    ]
+  },
+  "nested/foo.js": {
+    "id": "nested/foo.js",
+    "type": "internal",
+    "importer": [
+      "export.ts",
+      "nested/bar.js"
+    ],
+    "import": null
+  },
+  "export.ts": {
+    "id": "export.ts",
+    "type": "internal",
+    "importer": null,
+    "import": [
+      {
+        "id": "nested/foo.js",
+        "type": "static",
+        "ident": [
+          {
+            "name": "*",
+            "as": "*",
+            "isType": false
+          }
+        ],
+        "typeOnly": false
+      },
+      {
+        "id": "nested/bar.js",
+        "type": "static",
+        "ident": [
+          {
+            "name": "*",
+            "as": "baz",
+            "isType": false
+          }
+        ],
+        "typeOnly": true
+      },
+      {
+        "id": "nested/bar.js",
+        "type": "static",
+        "ident": [
+          {
+            "name": "bar",
+            "as": "bar",
+            "isType": false
+          },
+          {
+            "name": "default",
+            "as": "bar2",
+            "isType": false
+          }
+        ],
+        "typeOnly": false
+      },
+      {
+        "id": "nested/type.ts",
+        "type": "static",
+        "ident": [
+          {
+            "name": "TypeA",
+            "as": "TypeA",
+            "isType": true
+          }
+        ],
+        "typeOnly": true
+      }
+    ]
+  },
+  "nested/type.ts": {
+    "id": "nested/type.ts",
+    "type": "internal",
+    "importer": [
+      "export.ts"
+    ],
+    "import": null
+  }
+}

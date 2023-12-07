@@ -45,9 +45,6 @@
     "ava": "^5.1.1",
     "typescript": "^5.2.2"
   },
-  "ava": {
-    "timeout": "3m"
-  },
   "engines": {
     "node": ">= 10"
   },
@@ -56,8 +53,8 @@
     "build": "napi build --platform --release --dts core.d.ts --js core.js && tsc",
     "build:debug": "napi build --platform",
     "prepublishOnly": "napi prepublish -t npm",
-    "test:mock": "ava  **/{resolve,target}.spec.mjs",
-    "test:git": "ava  **/git.spec.mjs",
+    "test:mock": "ava  --config ./ava.config.mjs",
+    "test:git": "ava --config ./ava.config.git.mjs",
     "test": "npm run test:mock && npm run test:git",
     "universal": "napi universal",
     "version": "napi version"

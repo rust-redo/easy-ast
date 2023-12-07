@@ -1,12 +1,15 @@
 use std::sync::Arc;
 
 use swc_parser::{
-  ast::{ExportAll, ImportDecl, ImportSpecifier as SwcImportSpecifier, ExportNamedSpecifier, ModuleDecl, NamedExport},
+  ast::{
+    ExportAll, ExportSpecifier, ImportDecl, ImportSpecifier as SwcImportSpecifier,
+    ModuleExportName, NamedExport,
+  },
   visit::{noop_visit_type, Visit},
 };
 
 use crate::{
-  node::{self, ImportLink, ImportLinkKind, ImportNode, ImportNodeKind, ImportNodeMap, ImportSpecifier},
+  node::{ImportLink, ImportLinkKind, ImportNode, ImportNodeKind, ImportNodeMap, ImportSpecifier},
   resolver::ImportResolver,
 };
 
@@ -36,6 +39,13 @@ impl ImportVisitor {
     }
   }
 
+  pub(crate) fn get_module_export_name(export_name: &ModuleExportName) -> Arc<String> {
+    Arc::new(match export_name {
+      ModuleExportName::Ident(name) => name.sym.to_string(),
+      ModuleExportName::Str(name) => name.value.to_string(),
+    })
+  }
+
   fn resolve_from_process_id(&self, request: &str) -> ImportNode {
     let (id, in_root) = self
       .resolver
@@ -54,7 +64,9 @@ impl ImportVisitor {
     let module_id = module_node.id.clone();
     (
       module_id,
-      self.import_node.insert_node_depend(&process_id, module_node),
+      self
+        .import_node
+        .insert_node_depend(&process_id, module_node),
     )
   }
 }
@@ -80,7 +92,7 @@ impl Visit for ImportVisitor {
           ident.push(ImportSpecifier {
             name: name.clone(),
             _as: name,
-            is_type: named_spec.is_type_only
+            is_type: named_spec.is_type_only,
           });
         }
         SwcImportSpecifier::Default(ref default_spec) => {
@@ -88,13 +100,13 @@ impl Visit for ImportVisitor {
           ident.push(ImportSpecifier {
             name: Arc::new("default".into()),
             _as,
-            is_type: false
+            is_type: false,
           })
         }
         SwcImportSpecifier::Namespace(ref namespace) => ident.push(ImportSpecifier {
           name: Arc::new("*".into()),
           _as: Arc::new(namespace.local.sym.to_string()),
-          is_type: false
+          is_type: false,
         }),
       }
     }
@@ -103,7 +115,7 @@ impl Visit for ImportVisitor {
       id: module_id,
       kind: ImportLinkKind::Static,
       ident,
-      type_only: import.type_only
+      type_only: import.type_only,
     });
 
     // println!("serde {}", serde_json::to_string(&self.import_node.import).unwrap());
@@ -111,25 +123,63 @@ impl Visit for ImportVisitor {
   }
 
   fn visit_export_all(&mut self, export: &ExportAll) {
-    if export.type_only {
-      return;
-    }
     let (module_id, process_node) = self.insert_process_node_depent(&export.src.value.as_bytes());
     let imports = process_node.import.as_mut().unwrap();
     let name: Arc<String> = Arc::new("*".into());
-    let ident: Vec<ImportSpecifier> = vec![ImportSpecifier {name: name.clone(), _as: name, is_type: false}];
+    let ident: Vec<ImportSpecifier> = vec![ImportSpecifier {
+      name: name.clone(),
+      _as: name,
+      is_type: false,
+    }];
 
     imports.push(ImportLink {
       id: module_id,
       kind: ImportLinkKind::Static,
       ident,
-      type_only: false
+      type_only: export.type_only,
     });
   }
 
   fn visit_named_export(&mut self, export: &NamedExport) {
-    if export.type_only {
-      return;
+    match &export.src {
+      Some(src) => {
+        let (module_id, process_node) = self.insert_process_node_depent(&src.value.as_bytes());
+        let imports = process_node.import.as_mut().unwrap();
+        let mut ident: Vec<ImportSpecifier> = vec![];
+        let mut export_type_only = true;
+
+        for spec in export.specifiers.iter() {
+          match spec {
+            ExportSpecifier::Named(named_spec) => {
+              let name = ImportVisitor::get_module_export_name(&named_spec.orig);
+              let _as = if let Some(ref export_name) = named_spec.exported {
+                ImportVisitor::get_module_export_name(&export_name)
+              } else {
+                name.clone()
+              };
+              export_type_only = export_type_only && named_spec.is_type_only;
+              ident.push(ImportSpecifier {
+                name,
+                _as,
+                is_type: named_spec.is_type_only,
+              });
+            }
+            ExportSpecifier::Namespace(namespace_spec) => {
+              let _as = ImportVisitor::get_module_export_name(&namespace_spec.name);
+              ident.push(ImportSpecifier { name: Arc::new("*".into()), _as, is_type: false })
+            }
+            _ => {}
+          }
+        }
+
+        imports.push(ImportLink {
+          id: module_id,
+          kind: ImportLinkKind::Static,
+          ident,
+          type_only: export_type_only,
+        });
+      }
+      _ => {}
     }
 
     // dbg!(export);
