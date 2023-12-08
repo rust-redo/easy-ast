@@ -19,12 +19,12 @@ importers:
     devDependencies:
       easy-ast.graph:
         specifier: workspace:*
-        version: link:../packages/import
+        version: link:../packages/graph
       tinybench:
         specifier: ^2.5.1
         version: 2.5.1
 
-  packages/import:
+  packages/graph:
     dependencies:
       fast-glob:
         specifier: ^3.3.2

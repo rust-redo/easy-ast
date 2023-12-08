@@ -21,8 +21,8 @@ Binaries:
 |---|----|-----|----|----|----|---|
 |[axios@1.6.2](https://github.com/axios/axios/tree/v1.6.2)|`.js`|49|59|132|3|**12**,249,262.50|
 |[rxjs@8.0.0-alpha.12](https://github.com/ReactiveX/rxjs/tree/8.0.0-alpha.12)|`.ts`|205|205|880|3|**365**,465,279.17|
-|[nextui@2.0.0](https://github.com/nextui-org/nextui)|`.ts` `.tsx`|165|237|988|3|**57**,522,687.48|
-|[antd@5.11.2](https://github.com/ant-design/ant-design)|`.ts` `.tsx`|557|718|3419|3|**2883**,391,816.69|
+|[nextui@2.0.0](https://github.com/nextui-org/nextui)|`.ts` `.tsx`|165|237|1059|3|**57**,522,687.48|
+|[antd@5.11.2](https://github.com/ant-design/ant-design)|`.ts` `.tsx`|558|720|3494|3|**7412**,391,816.69|
 
 ## Install
 

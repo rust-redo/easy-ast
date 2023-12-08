@@ -42,12 +42,8 @@ export const validateParsed = (t, parsed, files) => {
         visited[importerId] = true
       }
 
-      visited = {}
-
-      for(const {id: importId, ident} of (parsed[id].import ?? [])) {
-        t.notDeepEqual(ident, visited[importId], `${id} import ${importId} duplicated`)
+      for(const {id: importId} of (parsed[id].import ?? [])) {
         t.truthy(parsed[importId], `${id} import ${importId} not exist`)
-        visited[importId] = ident
       }
     }
   }

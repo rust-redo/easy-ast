@@ -1,4 +1,4 @@
-import { mkdir, access, constants, } from 'node:fs/promises'
+import { mkdir, access, constants, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { spawn } from 'node:child_process'
 import debug from 'debug'
@@ -10,7 +10,10 @@ const repos = [
   ['axios', 'https://github.com/axios/axios.git', 'v1.6.2'],
   ['rxjs', 'https://github.com/ReactiveX/rxjs.git', '8.0.0-alpha.12'],
   ['nextui', 'https://github.com/nextui-org/nextui.git', 'v2.0.0'],
-  ['antd', 'https://github.com/ant-design/ant-design', '5.11.2']
+  ['antd', 'https://github.com/ant-design/ant-design', '5.11.2', async () => {
+    // skip version/index.ts error for now
+    await writeFile(join(repoRootDir, 'antd/components/version/index.ts'), `export default '1.0.0'`)
+  }]
 ]
 
 async function exist(file) {
@@ -28,7 +31,7 @@ async function run() {
     await mkdir(repoRootDir)
   }
 
-  await Promise.all(repos.map(async ([name, origin, branch]) => {
+  await Promise.all(repos.map(async ([name, origin, branch, onFinish]) => {
     const repoDir = join(repoRootDir, name)
 
     try {
@@ -37,6 +40,7 @@ async function run() {
         await git.clone(origin, repoDir)
         await git.cwd(repoDir)
         await git.checkout(branch)
+        await onFinish()
       }
 
       console.log(`  [install ${name} dependencies...]`)

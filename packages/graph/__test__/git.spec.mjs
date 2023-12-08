@@ -48,7 +48,7 @@ test('antd', t => {
       "components/{time-picker,date-picker,calendar}/locale/{a,b,c,d,el,es,et,eu,en_GB,f,g,h,i,j,k,l,m,n,p,r,u,u,s,t,v,x,y,w,z}*",
       "components/{qrcode,col/style,row/style}/**",
       "components/statistic/interface*",
-      "components/style/operationUnit*"
+      // "components/style/operationUnit*"
     ])
   validateParsed(t, data, files)
 })
