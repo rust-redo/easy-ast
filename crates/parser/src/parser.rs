@@ -1,15 +1,16 @@
+use easy_ast_resolver::{Alias, ModuleResolver};
+use easy_ast_visitor_import::{ImportNode, ImportNodeKind, ImportVisitor};
 use std::{collections::HashMap, env, sync::Arc};
 use swc_parser::SwcParser;
-use visitor_import::{ImportNode, ImportNodeKind, ImportResolver, ImportVisitor, ResolverAlias};
 
 pub struct Parser {
   swc: SwcParser,
   root: Arc<String>,
-  alias: Arc<ResolverAlias>,
+  alias: Arc<Alias>,
 }
 
 impl Parser {
-  pub fn new(root: Option<String>, alias: Option<ResolverAlias>) -> Parser {
+  pub fn new(root: Option<String>, alias: Option<Alias>) -> Parser {
     Parser {
       swc: SwcParser::new(),
       root: Arc::new(match root {
@@ -28,7 +29,7 @@ impl Parser {
   ) -> HashMap<Arc<String>, ImportNode> {
     let wrapped_depth = depth.unwrap_or(2);
     let wrapped_should_resolve = should_resolve.unwrap_or(true);
-    let mut visitor = ImportVisitor::new(ImportResolver::new(
+    let mut visitor = ImportVisitor::new(ModuleResolver::new(
       self.root.clone(),
       wrapped_should_resolve,
       self.alias.clone(),
@@ -67,7 +68,7 @@ impl Parser {
 
     while file_queue.is_empty() == false && depth > 0 {
       let target_file = file_queue.pop().unwrap();
-      let resolved_file = Arc::new(ImportResolver::resolve_file(&self.root, &target_file));
+      let resolved_file = Arc::new(ModuleResolver::resolve_file(&self.root, &target_file));
       let process_id = Arc::new(visitor.resolver.resolve_relative_root(&target_file).0);
 
       if processed_ids.contains_key(&process_id.clone()) == false {

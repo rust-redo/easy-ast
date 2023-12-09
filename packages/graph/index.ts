@@ -30,10 +30,15 @@ export interface ImportLink {
 export class Parser {
   parser: CoreParser
   root: string
-  constructor({root = './', alias}: {root?: string, alias?: string} = {}) {
+  constructor({root = './', alias}: {root?: string, alias?: Record<string, string>} = {}) {
     const absRoot = isAbsolute(root) ? root : resolve(process.cwd(), root)
     this.root = root
-    this.parser = new CoreParser(Buffer.from(absRoot), alias ? Buffer.from(alias) : undefined)
+    this.parser = new CoreParser(
+      Buffer.from(absRoot), 
+      alias ? Buffer.from(
+        Object.keys(alias).reduce((s, key) => [s, `${key}:${alias[key]}`].join(' '), '')
+      ) : undefined
+    )
   }
 
   parse(

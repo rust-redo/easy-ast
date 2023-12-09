@@ -8,19 +8,20 @@ use swc_parser::{
   visit::{noop_visit_type, Visit},
 };
 
-use crate::{
-  node::{ImportLink, ImportLinkKind, ImportNode, ImportNodeKind, ImportNodeMap, ImportSpecifier},
-  resolver::ImportResolver,
+use easy_ast_resolver::ModuleResolver;
+
+use crate::node::{
+  ImportLink, ImportLinkKind, ImportNode, ImportNodeKind, ImportNodeMap, ImportSpecifier,
 };
 
 pub struct ImportVisitor {
   pub import_node: ImportNodeMap,
   process_id: Option<Arc<String>>,
-  pub resolver: ImportResolver,
+  pub resolver: ModuleResolver,
 }
 
 impl ImportVisitor {
-  pub fn new(resolver: ImportResolver) -> Self {
+  pub fn new(resolver: ModuleResolver) -> Self {
     Self {
       import_node: ImportNodeMap::new(),
       process_id: None,
@@ -166,7 +167,11 @@ impl Visit for ImportVisitor {
             }
             ExportSpecifier::Namespace(namespace_spec) => {
               let _as = ImportVisitor::get_module_export_name(&namespace_spec.name);
-              ident.push(ImportSpecifier { name: Arc::new("*".into()), _as, is_type: false })
+              ident.push(ImportSpecifier {
+                name: Arc::new("*".into()),
+                _as,
+                is_type: false,
+              })
             }
             _ => {}
           }

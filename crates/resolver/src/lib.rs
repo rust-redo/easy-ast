@@ -1,14 +1,16 @@
 use std::{path::Path, sync::Arc};
 
-use oxc_resolver::{Alias, ResolveError, ResolveOptions, Resolver};
+use oxc_resolver::{ResolveError, ResolveOptions, Resolver};
 
-pub struct ImportResolver {
+pub use oxc_resolver::{Alias, AliasValue};
+
+pub struct ModuleResolver {
   resolver: Resolver,
   root: Arc<String>,
   pub should_resolve: bool,
 }
 
-impl ImportResolver {
+impl ModuleResolver {
   pub fn new(root: Arc<String>, should_resolve: bool, alias: Arc<Alias>) -> Self {
     Self {
       root,
@@ -56,7 +58,7 @@ impl ImportResolver {
 
   /// return module absolute path based on source
   pub fn resolve_module(&self, source: &str, request: &str) -> (String, bool) {
-    let source_dir = &ImportResolver::resolve_file(&self.root, source);
+    let source_dir = &ModuleResolver::resolve_file(&self.root, source);
     let source_dir = Path::new(source_dir)
       .parent()
       .unwrap_or_else(|| Path::new("/"));

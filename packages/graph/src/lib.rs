@@ -1,8 +1,8 @@
 #![deny(clippy::all)]
 
+use easy_ast_napi::{compute_alias, compute_root};
+use easy_ast_parser::Parser as InternalParser;
 use napi::bindgen_prelude::Buffer;
-use parser::Parser as InternalParser;
-use visitor_import::{ImportResolver, ResolverAlias, ResolverAliasValue};
 
 #[macro_use]
 extern crate napi_derive;
@@ -16,8 +16,8 @@ pub struct Parser {
 impl Parser {
   #[napi(constructor)]
   pub fn new(root: Option<Buffer>, alias: Option<Buffer>) -> Self {
-    let root = Self::compute_root(root);
-    let alias = Self::compute_alias(&root, alias);
+    let root = compute_root(root);
+    let alias = compute_alias(&root, alias);
     Self {
       parser: InternalParser::new(root, alias),
     }
@@ -32,38 +32,5 @@ impl Parser {
       .unwrap()
       .as_bytes()
       .into()
-  }
-
-  fn compute_root(root: Option<Buffer>) -> Option<String> {
-    match root {
-      Some(buf) => Some(String::from_utf8_lossy(&buf).to_string()),
-      _ => None,
-    }
-  }
-
-  fn compute_alias(root: &Option<String>, alias: Option<Buffer>) -> Option<ResolverAlias> {
-    match alias {
-      Some(buf) => {
-        let alias_str = String::from_utf8_lossy(&buf).to_string();
-        let alias: ResolverAlias = alias_str
-          .split(" ")
-          .map(|s| {
-            let kv: Vec<&str> = s.split(":").collect();
-            let paths: Vec<ResolverAliasValue> = kv[1]
-              .split(",")
-              .map(|p| {
-                return ResolverAliasValue::Path(ImportResolver::resolve_file(
-                  root.as_ref().unwrap(),
-                  p,
-                ));
-              })
-              .collect();
-            return (kv[0].to_owned(), paths);
-          })
-          .collect();
-        Some(alias)
-      }
-      _ => None,
-    }
   }
 }

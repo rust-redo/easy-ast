@@ -1,6 +1,7 @@
 use std::{
   collections::{HashMap, HashSet},
-  sync::Arc, default,
+  default,
+  sync::Arc,
 };
 
 use serde::Serialize;
@@ -79,7 +80,7 @@ pub struct ImportSpecifier {
   #[serde(rename = "as")]
   pub _as: Arc<String>,
   #[serde(rename = "isType")]
-  pub is_type: bool
+  pub is_type: bool,
 }
 
 #[derive(Serialize, Debug, Clone, Default)]
@@ -88,7 +89,7 @@ pub enum ImportLinkKind {
   #[default]
   Static,
   Dynamic,
-  Require
+  Require,
 }
 
 #[derive(Serialize, Debug, Default, Clone, PartialEq, Eq)]
@@ -110,7 +111,7 @@ pub struct ImportLink {
   pub kind: ImportLinkKind,
   pub ident: Vec<ImportSpecifier>,
   #[serde(rename = "typeOnly")]
-  pub type_only: bool
+  pub type_only: bool,
 }
 
 #[derive(Serialize, Debug, Default, Clone)]
