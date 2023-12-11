@@ -368,9 +368,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "56ce8c6da7551ec6c462cbaf3bfbc75131ebbfa1c944aeaa9dab51ca1c5f0c3b"
 
 [[package]]
+name = "easy_ast_error"
+version = "0.1.0"
+
+[[package]]
 name = "easy_ast_graph"
 version = "0.0.0"
 dependencies = [
+ "easy_ast_error",
  "easy_ast_graph_parser",
  "easy_ast_napi",
  "easy_ast_visitor",
@@ -399,6 +404,7 @@ dependencies = [
 name = "easy_ast_resolver"
 version = "0.1.0"
 dependencies = [
+ "easy_ast_error",
  "oxc_resolver",
 ]
 
@@ -406,6 +412,7 @@ dependencies = [
 name = "easy_ast_visitor"
 version = "0.1.0"
 dependencies = [
+ "easy_ast_error",
  "easy_ast_resolver",
  "easy_ast_visitor_import",
  "serde",
@@ -417,6 +424,7 @@ dependencies = [
 name = "easy_ast_visitor_import"
 version = "0.1.0"
 dependencies = [
+ "easy_ast_error",
  "easy_ast_resolver",
  "serde",
  "serde_json",
@@ -2529,6 +2537,7 @@ dependencies = [
 name = "swc_parser"
 version = "0.1.0"
 dependencies = [
+ "easy_ast_error",
  "swc",
  "swc_common",
  "swc_core",

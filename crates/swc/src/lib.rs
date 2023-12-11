@@ -1,3 +1,4 @@
+use easy_ast_error::EasyAstError;
 use std::{path::Path, sync::Arc};
 use swc_core::{
   base::{config::IsModule, Compiler},
@@ -43,32 +44,43 @@ impl SwcParser {
   }
 
   /// parse single js file
-  pub fn parse_file(&self, file: &str, visitor: &mut dyn Visit) {
+  pub fn parse_file(&self, file: &str, visitor: &mut dyn Visit) -> Result<(), EasyAstError> {
     let (syntax, is_js, is_ts) = self.get_options(file);
 
     if !is_js {
-      return;
+      return Ok(());
     }
 
-    let fm = self
-      .source_map
-      .load_file(Path::new(file))
-      .expect(&format!("failed to load {}", file));
+    let fm_result = self.source_map.load_file(Path::new(file));
 
-    let mut program = self
-      .compiler
-      .parse_js(
-        fm,
-        &self.handler,
-        EsVersion::latest(),
-        syntax,
-        IsModule::Unknown,
-        None,
-      )
-      .unwrap();
+    if fm_result.is_err() {
+      return Err(EasyAstError::FileNotFound(format!(
+        "failed to load {}",
+        file
+      )));
+    }
+
+    let fm = fm_result.unwrap();
+
+    // XXX: syntax error is unrecoverable
+    let program_result = self.compiler.parse_js(
+      fm,
+      &self.handler,
+      EsVersion::latest(),
+      syntax,
+      IsModule::Unknown,
+      None,
+    );
+
+    if program_result.is_err() {
+      return Err(EasyAstError::SyntaxError(format!("{} syntax error", file)));
+    }
+
+    let mut program = program_result.unwrap();
 
     program.visit_mut_with(&mut resolver(Mark::new(), Mark::new(), is_ts));
-    program.visit_with(visitor)
+    program.visit_with(visitor);
+    Ok(())
   }
 
   /// return (Syntax, is_js, is_ts)

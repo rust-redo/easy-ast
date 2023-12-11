@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use easy_ast_error::EasyAstError;
 use swc_parser::{
   ast::{
     ExportAll, ExportSpecifier, ImportDecl, ImportSpecifier as SwcImportSpecifier,
@@ -18,6 +19,7 @@ pub struct ImportVisitor {
   pub import_node: ImportNodeMap,
   process_id: Option<Arc<String>>,
   pub resolver: ModuleResolver,
+  pub error: Option<EasyAstError>,
 }
 
 impl ImportVisitor {
@@ -26,6 +28,7 @@ impl ImportVisitor {
       import_node: ImportNodeMap::new(),
       process_id: None,
       resolver,
+      error: None,
     }
   }
 
@@ -47,28 +50,42 @@ impl ImportVisitor {
     })
   }
 
-  fn resolve_from_process_id(&self, request: &str) -> ImportNode {
-    let (id, in_root) = self
+  fn resolve_from_process_id(&mut self, request: &str) -> Option<ImportNode> {
+    let module = self
       .resolver
       .resolve_module(self.process_id.as_ref().unwrap(), request);
 
-    ImportNode {
+    if module.is_err() {
+      self.error = Some(module.unwrap_err());
+      return None;
+    }
+
+    let (id, in_root) = module.unwrap();
+
+    Some(ImportNode {
       kind: ImportNodeKind::compute(&id, in_root),
       id: Arc::new(id),
       ..ImportNode::default()
-    }
+    })
   }
 
-  fn insert_process_node_depent(&mut self, src: &[u8]) -> (Arc<String>, &mut ImportNode) {
+  fn insert_process_node_depent(&mut self, src: &[u8]) -> Option<(Arc<String>, &mut ImportNode)> {
     let process_id = self.process_id.clone().unwrap();
-    let module_node = self.resolve_from_process_id(&String::from_utf8_lossy(src));
+    let module_opt = self.resolve_from_process_id(&String::from_utf8_lossy(src));
+
+    if module_opt.is_none() {
+      return None;
+    }
+
+    let module_node = module_opt.unwrap();
     let module_id = module_node.id.clone();
-    (
+
+    Some((
       module_id,
       self
         .import_node
         .insert_node_depend(&process_id, module_node),
-    )
+    ))
   }
 }
 
@@ -82,7 +99,12 @@ impl Visit for ImportVisitor {
   // }
 
   fn visit_import_decl(&mut self, import: &ImportDecl) {
-    let (module_id, process_node) = self.insert_process_node_depent(&import.src.value.as_bytes());
+    let opt = self.insert_process_node_depent(&import.src.value.as_bytes());
+    if opt.is_none() {
+      return;
+    }
+
+    let (module_id, process_node) = opt.unwrap();
 
     let imports = process_node.import.as_mut().unwrap();
     let mut ident: Vec<ImportSpecifier> = vec![];
@@ -124,7 +146,12 @@ impl Visit for ImportVisitor {
   }
 
   fn visit_export_all(&mut self, export: &ExportAll) {
-    let (module_id, process_node) = self.insert_process_node_depent(&export.src.value.as_bytes());
+    let opt = self.insert_process_node_depent(&export.src.value.as_bytes());
+    if opt.is_none() {
+      return;
+    }
+
+    let (module_id, process_node) = opt.unwrap();
     let imports = process_node.import.as_mut().unwrap();
     let name: Arc<String> = Arc::new("*".into());
     let ident: Vec<ImportSpecifier> = vec![ImportSpecifier {
@@ -144,7 +171,12 @@ impl Visit for ImportVisitor {
   fn visit_named_export(&mut self, export: &NamedExport) {
     match &export.src {
       Some(src) => {
-        let (module_id, process_node) = self.insert_process_node_depent(&src.value.as_bytes());
+        let opt = self.insert_process_node_depent(&src.value.as_bytes());
+        if opt.is_none() {
+          return;
+        }
+
+        let (module_id, process_node) = opt.unwrap();
         let imports = process_node.import.as_mut().unwrap();
         let mut ident: Vec<ImportSpecifier> = vec![];
         let mut export_type_only = true;

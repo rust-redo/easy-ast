@@ -1,3 +1,4 @@
+use easy_ast_error::EasyAstError;
 use easy_ast_resolver::{Alias, ModuleResolver};
 use easy_ast_visitor_import::{ImportNode, ImportNodeKind, ImportVisitor};
 use std::{collections::HashMap, env, sync::Arc};
@@ -26,7 +27,7 @@ impl Visitor {
     files: Vec<&str>,
     depth: Option<u8>,
     should_resolve: Option<bool>,
-  ) -> ImportVisitor {
+  ) -> Result<ImportVisitor, EasyAstError> {
     let wrapped_depth = depth.unwrap_or(2);
     let wrapped_should_resolve = should_resolve.unwrap_or(true);
     let mut visitor: ImportVisitor = ImportVisitor::new(ModuleResolver::new(
@@ -48,10 +49,10 @@ impl Visitor {
             1
           },
           &mut processed_ids,
-        );
+        )?;
       }
 
-      visitor
+      Ok(visitor)
     })
   }
 
@@ -61,14 +62,14 @@ impl Visitor {
     visitor: &mut ImportVisitor,
     mut depth: u8,
     processed_ids: &mut HashMap<Arc<String>, bool>,
-  ) {
+  ) -> Result<(), EasyAstError> {
     let mut file_queue = vec![Arc::new(file.to_owned())];
     let mut current_count = 1;
     let mut next_count = 0;
 
     while file_queue.is_empty() == false && depth > 0 {
       let target_file = file_queue.pop().unwrap();
-      let resolved_file = Arc::new(ModuleResolver::resolve_file(&self.root, &target_file));
+      let resolved_file = Arc::new(ModuleResolver::resolve_file(&self.root, &target_file)?);
       let process_id = Arc::new(visitor.resolver.resolve_relative_root(&target_file).0);
 
       if processed_ids.contains_key(&process_id.clone()) == false {
@@ -94,5 +95,7 @@ impl Visitor {
         depth -= 1;
       }
     }
+
+    Ok(())
   }
 }

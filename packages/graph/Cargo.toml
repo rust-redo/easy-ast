@@ -11,6 +11,7 @@ crate-type = ["cdylib"]
 napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
 napi-derive = "2.12.2"
 serde_json = "1.0.107"
+easy_ast_error = { version = "0.1.0", path = "../../crates/error" }
 easy_ast_visitor = { version = "0.1.0", path = "../../crates/visitor" }
 easy_ast_graph_parser = { version = "0.1.0", path = "../../crates/graph_parser" }
 easy_ast_napi = { version = "0.1.0", path = "../../crates/napi" }

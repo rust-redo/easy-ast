@@ -24,7 +24,11 @@ pub fn compute_alias(root: &Option<String>, alias: Option<Buffer>) -> Option<Ali
           let paths: Vec<AliasValue> = kv[1]
             .split(",")
             .map(|p| {
-              return AliasValue::Path(ModuleResolver::resolve_file(root.as_ref().unwrap(), p));
+              let res = ModuleResolver::resolve_file(root.as_ref().unwrap(), p);
+              match res {
+                Ok(path) => AliasValue::Path(path),
+                Err(_) => AliasValue::Ignore,
+              }
             })
             .collect();
           return (kv[0].to_owned(), paths);

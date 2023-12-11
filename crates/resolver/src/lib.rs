@@ -1,5 +1,6 @@
 use std::{path::Path, sync::Arc};
 
+use easy_ast_error::EasyAstError;
 use oxc_resolver::{ResolveError, ResolveOptions, Resolver};
 
 pub use oxc_resolver::{Alias, AliasValue};
@@ -30,14 +31,15 @@ impl ModuleResolver {
   }
 
   /// return file absolute path based on source
-  pub fn resolve_file(source: &str, file: &str) -> String {
+  pub fn resolve_file(source: &str, file: &str) -> Result<String, EasyAstError> {
     let result = Path::new(source).join(Path::new(file)).canonicalize();
 
     match result {
-      Ok(buf) => buf.to_str().unwrap().to_string(),
-      Err(err) => {
-        panic!("failed to resolve {} from {}: {}", file, source, err);
-      }
+      Ok(buf) => Ok(buf.to_str().unwrap().to_string()),
+      Err(err) => Err(EasyAstError::FileNotFound(format!(
+        "failed to resolve {} from {}: {}",
+        file, source, err
+      ))),
     }
   }
 
@@ -57,8 +59,12 @@ impl ModuleResolver {
   }
 
   /// return module absolute path based on source
-  pub fn resolve_module(&self, source: &str, request: &str) -> (String, bool) {
-    let source_dir = &ModuleResolver::resolve_file(&self.root, source);
+  pub fn resolve_module(
+    &self,
+    source: &str,
+    request: &str,
+  ) -> Result<(String, bool), EasyAstError> {
+    let source_dir = &ModuleResolver::resolve_file(&self.root, source)?;
     let source_dir = Path::new(source_dir)
       .parent()
       .unwrap_or_else(|| Path::new("/"));
@@ -75,6 +81,6 @@ impl ModuleResolver {
       request.to_owned()
     };
 
-    self.resolve_relative_root(&id)
+    Ok(self.resolve_relative_root(&id))
   }
 }

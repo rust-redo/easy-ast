@@ -23,3 +23,4 @@ swc_core =  { version = "0.86.93", features = [
   "base_concurrent"
 ] }
 swc_ecmascript = { version = "0.236.85", features = ["transforms", "visit", "parser"] }
+easy_ast_error = { version = "0.1.0", path = "../error" }
