@@ -1,0 +1,9 @@
+[package]
+name = "easy_ast_graph_parser"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+easy_ast_visitor_import = { version = "0.1.0", path = "../visitor_import" }

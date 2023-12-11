@@ -2,6 +2,7 @@ import test from 'ava'
 import {parser, readParsedFile} from './utils.mjs'
 
 test('should parse export', (t) => {
+  parser.visit('./export.ts')
   const parsed = parser.parse('./export.ts')
   const json = readParsedFile(
     'export.json', 

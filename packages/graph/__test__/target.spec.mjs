@@ -2,8 +2,10 @@ import test from 'ava'
 import {parser, readParsedFile} from './utils.mjs'
 
 test('should parse es', (t) => {
+  parser.visit('es.js');
+
   t.deepEqual(
-    parser.parse('es.js'), 
+    parser.parse(), 
     readParsedFile(
       'es.json', 
       {'es.js': 'es.js'},
@@ -12,12 +14,14 @@ test('should parse es', (t) => {
 })
 
 test('should parse ts', (t) => {
-  t.deepEqual(parser.parse("es.ts"), readParsedFile('es-ts.json', {'es.ts': 'es.ts'},))
+  parser.visit("es.ts")
+  t.deepEqual(parser.parse(), readParsedFile('es-ts.json', {'es.ts': 'es.ts'},))
 })
 
 test('should parse jsx', (t) => {
+  parser.visit('es.jsx')
   t.deepEqual(
-    parser.parse('es.jsx'), 
+    parser.parse(), 
     readParsedFile(
       'es-jsx.json', 
       {'es.jsx': 'es.jsx'},
@@ -30,8 +34,9 @@ test('should parse jsx', (t) => {
 })
 
 test('should parse tsx', (t) => {
+  parser.visit('es.tsx')
   t.deepEqual(
-    parser.parse('es.tsx'), 
+    parser.parse(), 
     readParsedFile(
       'es-tsx.json', 
       {'es.tsx': 'es.tsx'},

@@ -11,7 +11,8 @@ test('should parse with resolve and recursion', (t) => {
     },
     { semver: 'semver/index.js' }
   )
-  const parsedTree = parser.parse('resolve.js', {depth: 3})
+  parser.visit('resolve.js', {depth: 3})
+  const parsedTree = parser.parse()
 
   importJson['nested/foo.js'].importer.forEach(
     id => {
@@ -42,8 +43,9 @@ test('should parse without recursion', (t) => {
   importJson['nested/bar.js'].import = null
   importJson['nested/foo.js'].importer.pop()
 
+  parser.visit('resolve.js', {depth: 1})
   t.deepEqual(
-    parser.parse('resolve.js', {depth: 1}),
+    parser.parse(),
    importJson
   )
 })
@@ -63,8 +65,10 @@ test('should parse without resolve', t => {
   importJson['nested/bar'].import = null
   importJson['nested/foo'].importer.pop()
 
+  parser.visit('resolve.js', { resolve: false })
+
   t.deepEqual(
-    parser.parse('resolve.js', { resolve: false }),
+    parser.parse(),
     importJson
   )
 })
@@ -84,8 +88,10 @@ test('should parse without recursion & resolve', (t) => {
   importJson['nested/bar'].import = null
   importJson['nested/foo'].importer.pop()
 
+  parser.visit('resolve.js', { depth: 1, resolve: false })
+
   t.deepEqual(
-    parser.parse('resolve.js', { depth: 1, resolve: false }),
+    parser.parse(),
     importJson
   )
 })

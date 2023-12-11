@@ -371,12 +371,20 @@ checksum = "56ce8c6da7551ec6c462cbaf3bfbc75131ebbfa1c944aeaa9dab51ca1c5f0c3b"
 name = "easy_ast_graph"
 version = "0.0.0"
 dependencies = [
+ "easy_ast_graph_parser",
  "easy_ast_napi",
- "easy_ast_parser",
+ "easy_ast_visitor",
  "napi",
  "napi-build",
  "napi-derive",
  "serde_json",
+]
+
+[[package]]
+name = "easy_ast_graph_parser"
+version = "0.1.0"
+dependencies = [
+ "easy_ast_visitor_import",
 ]
 
 [[package]]
@@ -388,7 +396,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "easy_ast_parser"
+name = "easy_ast_resolver"
+version = "0.1.0"
+dependencies = [
+ "oxc_resolver",
+]
+
+[[package]]
+name = "easy_ast_visitor"
 version = "0.1.0"
 dependencies = [
  "easy_ast_resolver",
@@ -396,13 +411,6 @@ dependencies = [
  "serde",
  "serde_json",
  "swc_parser",
-]
-
-[[package]]
-name = "easy_ast_resolver"
-version = "0.1.0"
-dependencies = [
- "oxc_resolver",
 ]
 
 [[package]]

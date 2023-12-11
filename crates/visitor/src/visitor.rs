@@ -3,15 +3,15 @@ use easy_ast_visitor_import::{ImportNode, ImportNodeKind, ImportVisitor};
 use std::{collections::HashMap, env, sync::Arc};
 use swc_parser::SwcParser;
 
-pub struct Parser {
+pub struct Visitor {
   swc: SwcParser,
   root: Arc<String>,
   alias: Arc<Alias>,
 }
 
-impl Parser {
-  pub fn new(root: Option<String>, alias: Option<Alias>) -> Parser {
-    Parser {
+impl Visitor {
+  pub fn new(root: Option<String>, alias: Option<Alias>) -> Visitor {
+    Visitor {
       swc: SwcParser::new(),
       root: Arc::new(match root {
         Some(r) => r,
@@ -21,15 +21,15 @@ impl Parser {
     }
   }
 
-  pub fn parse(
+  pub fn visit(
     &self,
     files: Vec<&str>,
     depth: Option<u8>,
     should_resolve: Option<bool>,
-  ) -> HashMap<Arc<String>, ImportNode> {
+  ) -> ImportVisitor {
     let wrapped_depth = depth.unwrap_or(2);
     let wrapped_should_resolve = should_resolve.unwrap_or(true);
-    let mut visitor = ImportVisitor::new(ModuleResolver::new(
+    let mut visitor: ImportVisitor = ImportVisitor::new(ModuleResolver::new(
       self.root.clone(),
       wrapped_should_resolve,
       self.alias.clone(),
@@ -39,7 +39,7 @@ impl Parser {
       let mut processed_ids: HashMap<Arc<String>, bool> = HashMap::new();
 
       for file in files.iter() {
-        self.deep_parse(
+        self.deep_visit(
           file,
           &mut visitor,
           if wrapped_should_resolve {
@@ -51,11 +51,11 @@ impl Parser {
         );
       }
 
-      visitor.import_node.map
+      visitor
     })
   }
 
-  fn deep_parse<'a>(
+  fn deep_visit<'a>(
     &self,
     file: &str,
     visitor: &mut ImportVisitor,

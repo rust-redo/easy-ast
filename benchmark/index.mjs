@@ -17,25 +17,29 @@ function statis(name, map, depth) {
 }
 async function run() {
   for (const [name, target, depth] of repos) {
-    function createParser() {
-      return new Parser({
+    function parse(...params) {
+      const parser = new Parser({
         root: join(process.cwd(), `../repos/${name}`)
       })
+
+      parser.visit(...params)
+      return parser.parse()
     }
 
-    statis(name, createParser().parse(target, {resolve: false}), 1)
+
+    statis(name, parse(target, {resolve: false}), 1)
 
     const bench = new Bench({ time: 200  });
     bench
       .add(`${name} without resolve`, () => {
-        createParser().parse(target, { resolve: false })
+        parse(target, { resolve: false })
       })
 
     for (let i = 1; i <= depth; i++) {
-      statis(name, createParser().parse(target, {depth: i}), i)
+      statis(name, parse(target, {depth: i}), i)
 
       bench.add(`${name} with depth=${i}`, () => {
-        createParser().parse(target, { depth: i })
+        parse(target, { depth: i })
       })
     }
 

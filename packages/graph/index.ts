@@ -41,18 +41,16 @@ export class Parser {
     )
   }
 
-  parse(
+  visit(
     files: string | string[], 
     {
       depth,
       resolve,
-      buffer,
     }: {
       depth?: number,
       resolve?: boolean
-      buffer?: boolean
     } = {}
-  ): Record<string, ImportNode> | Buffer  {
+  )  {
     const fileArr = (Array.isArray(files) ? files : [files]).reduce((acc, file) => {
       if(fg.isDynamicPattern(file)) {
         acc.push(...fg.sync(file, {cwd: this.root}))
@@ -62,8 +60,12 @@ export class Parser {
       return acc
     }, [] as string[])
 
-    const parsed = this.parser.parse(Buffer.from(fileArr.toString()), depth, resolve)
-    return buffer ? parsed : JSON.parse(parsed.toString())
+    this.parser.visit(Buffer.from(fileArr.toString()), depth, resolve)
+  }
+
+  parse() {
+    const parsed = this.parser.parse()
+    return JSON.parse(parsed.toString())
   }
 }
 

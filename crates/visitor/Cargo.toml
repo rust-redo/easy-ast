@@ -1,5 +1,5 @@
 [package]
-name = "easy_ast_parser"
+name = "easy_ast_visitor"
 version = "0.1.0"
 edition = "2021"
 
