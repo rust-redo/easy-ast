@@ -111,6 +111,7 @@ jobs:
         with:
           node-version: 18
           check-latest: true
+          cache: pnpm
       - name: Install
         uses: dtolnay/rust-toolchain@stable
         if: ${{ !matrix.settings.docker }}
@@ -140,13 +141,14 @@ jobs:
         run: pnpm config set supportedArchitectures.cpu "ia32"
         shell: bash
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm i -g npm && pnpm install
       - name: Setup node x86
         uses: actions/setup-node@v3
         if: matrix.settings.target == 'i686-pc-windows-msvc'
         with:
           node-version: 18
           check-latest: true
+          cache: pnpm
           architecture: x86
       - name: Build in docker
         uses: addnab/docker-run-action@v3
@@ -241,8 +243,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           check-latest: true
+          cache: pnpm
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm i -g npm && pnpm install
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -275,8 +278,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           check-latest: true
+          cache: pnpm
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm i -g npm && pnpm install
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -309,10 +313,11 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           check-latest: true
+          cache: pnpm
       - name: Install dependencies
         run: |
           pnpm config set supportedArchitectures.libc "musl"
-          pnpm install
+          pnpm i -g npm && pnpm install
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -349,7 +354,7 @@ jobs:
         run: |
           pnpm config set supportedArchitectures.cpu "arm64"
           pnpm config set supportedArchitectures.libc "glibc"
-          pnpm install
+          pnpm i -g npm && pnpm install
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -383,7 +388,7 @@ jobs:
         run: |
           pnpm config set supportedArchitectures.cpu "arm64"
           pnpm config set supportedArchitectures.libc "musl"
-          pnpm install
+          pnpm i -g npm && pnpm install
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -422,7 +427,7 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm config set supportedArchitectures.cpu "arm"
-          pnpm install
+          pnpm i -g npm && pnpm install
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -452,8 +457,9 @@ jobs:
         with:
           node-version: 18
           check-latest: true
+          cache: pnpm
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm i -g npm && pnpm install
       - name: Download macOS x64 artifact
         uses: actions/download-artifact@v3
         with:
@@ -494,8 +500,9 @@ jobs:
         with:
           node-version: 18
           check-latest: true
+          cache: pnpm
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm i -g npm && pnpm install
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
