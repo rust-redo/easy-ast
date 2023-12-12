@@ -24,7 +24,6 @@ process.on('uncaughtException', err => console.log(err))
 
 async function run() {
   debug.enable('simple-git:output*');
-  const git = simpleGit({ maxConcurrentProcesses: 6, }).clean(CleanOptions.FORCE)
 
   // create ./repos dir
   if (!(await exist(repoRootDir))) {
@@ -33,6 +32,7 @@ async function run() {
 
   await Promise.all(repos.map(async ([name, origin, branch, onFinish]) => {
     const repoDir = join(repoRootDir, name)
+    const git = simpleGit({ maxConcurrentProcesses: 6, }).clean(CleanOptions.FORCE)
 
     try {
       if (!(await exist(repoDir))) {
@@ -40,7 +40,7 @@ async function run() {
         await git.clone(origin, repoDir)
         await git.cwd(repoDir)
         await git.checkout(branch)
-        await onFinish()
+        await onFinish?.()
       }
 
       console.log(`  [install ${name} dependencies...]`)
