@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "bench": "pnpm --filter \"*bench*\" run bench",
-    "build:npm": "pnpm --filter \"{packages/**}\" run build",
+    "build": "pnpm build:crate && pnpm build:npm",
+    "build:crate": "pnpm --filter \"{packages/**}\" run build:crate",
+    "build:npm": "pnpm --filter \"{packages/**}\" run build:npm",
     "install:test": "cd packages/import/__test__/fixture/code && npm i",
     "parse": "it",
     "postinstall": "pnpm repos && pnpm install:test",
