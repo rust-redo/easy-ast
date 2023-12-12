@@ -1,7 +1,7 @@
 name: CI
 env:
   DEBUG: napi:*
-  APP_NAME: tests
+  BIN_PATH: packages/**/*.node
   MACOSX_DEPLOYMENT_TARGET: '10.13'
 permissions:
   contents: write
@@ -29,7 +29,7 @@ jobs:
             target: x86_64-apple-darwin
             build: |
               pnpm build
-              strip -x packages/**/*.node
+              strip -x ${{ env.BIN_PATH }}
           - host: windows-latest
             build: pnpm build
             target: x86_64-pc-windows-msvc
@@ -46,17 +46,17 @@ jobs:
               set -e &&
               pnpm build:crate --target x86_64-unknown-linux-gnu &&
               pnpm build:npm &&
-              strip -x packages/**/*.node
+              strip -x ${{ env.BIN_PATH }}
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            build: set -e && pnpm build && strip -x packages/**/*.node
+            build: set -e && pnpm build && strip -x ${{ env.BIN_PATH }}
           - host: macos-latest
             target: aarch64-apple-darwin
             build: |
               pnpm build:crate --target aarch64-apple-darwin
               pnpm build:npm
-              strip -x packages/**/*.node
+              strip -x ${{ env.BIN_PATH }}
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
@@ -64,7 +64,7 @@ jobs:
               set -e &&
               pnpm build:crate --target aarch64-unknown-linux-gnu &&
               pnpm build:npm &&
-              aarch64-unknown-linux-gnu-strip packages/**/*.node
+              aarch64-unknown-linux-gnu-strip ${{ env.BIN_PATH }}
           - host: ubuntu-latest
             target: armv7-unknown-linux-gnueabihf
             setup: |
@@ -73,19 +73,19 @@ jobs:
             build: |
               pnpm build:crate --target armv7-unknown-linux-gnueabihf
               pnpm build:npm
-              arm-linux-gnueabihf-strip packages/**/*.node
+              arm-linux-gnueabihf-strip ${{ env.BIN_PATH }}
           - host: ubuntu-latest
             target: aarch64-linux-android
             build: |
               pnpm build:crate --target aarch64-linux-android
               pnpm build:npm
-              ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/**/*.node
+              ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip ${{ env.BIN_PATH }}
           - host: ubuntu-latest
             target: armv7-linux-androideabi
             build: |
               pnpm build:crate --target armv7-linux-androideabi
               pnpm build:npm
-              ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/**/*.node
+              ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip ${{ env.BIN_PATH }}
           - host: ubuntu-latest
             target: aarch64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
@@ -94,7 +94,7 @@ jobs:
               rustup target add aarch64-unknown-linux-musl &&
               pnpm build:crate --target aarch64-unknown-linux-musl &&
               pnpm build:npm
-              /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip packages/**/*.node
+              /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip ${{ env.BIN_PATH }}
           - host: windows-latest
             target: aarch64-pc-windows-msvc
             build: pnpm build:crate --target aarch64-pc-windows-msvc
@@ -165,7 +165,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: ${{ env.APP_NAME }}.packages/**/*.node
+          path: ${{ env.BIN_PATH }}
           if-no-files-found: error
   build-freebsd:
     runs-on: macos-12
@@ -204,7 +204,8 @@ jobs:
             freebsd-version
             pnpm install
             pnpm build:crate
-            strip -x packages/**/*.node
+            pnpm build:npm
+            strip -x ${{ env.BIN_PATH }}
             pnpm test
             rm -rf node_modules
             rm -rf target
@@ -213,7 +214,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-freebsd
-          path: ${{ env.APP_NAME }}.packages/**/*.node
+          path: ${{ env.BIN_PATH }}
           if-no-files-found: error
   test-macOS-windows-binding:
     name: Test bindings on ${{ matrix.settings.target }} - node@${{ matrix.node }}
@@ -475,7 +476,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-universal-apple-darwin
-          path: ${{ env.APP_NAME }}.packages/**/*.node
+          path: ${{ env.BIN_PATH }}
           if-no-files-found: error
   publish:
     name: Publish

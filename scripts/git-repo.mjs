@@ -44,7 +44,7 @@ async function run() {
       }
 
       console.log(`  [install ${name} dependencies...]`)
-      spawn(`npm`, ['install'], { stdio: 'ignore', cwd: repoDir })
+      spawn(`pnpm`, ['install'], { stdio: 'ignore', cwd: repoDir })
     } catch (err) {console.log(err) }
   }))
 }
