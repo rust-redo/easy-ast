@@ -1,7 +1,8 @@
 name: CI
 env:
   DEBUG: napi:*
-  BUILD_CRATE_OUTPUT: ./*packages/**/{*.node,core.*}
+  BUILD_CRATE_BIN: ./*packages/**/*.node
+  BUILD_CRATE_JS: ./*packages/**/core.*
   MACOSX_DEPLOYMENT_TARGET: '10.13'
 permissions:
   contents: write
@@ -159,7 +160,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: ${{ env.BUILD_CRATE_OUTPUT }}
+          path: |
+            ${{ env.BUILD_CRATE_BIN }}
+            ${{ env.BUILD_CRATE_JS }}
           if-no-files-found: error
   build-freebsd:
     runs-on: macos-12
@@ -210,7 +213,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-freebsd
-          path: ${{ env.BUILD_CRATE_OUTPUT }}
+          path: |
+            ${{ env.BUILD_CRATE_BIN }}
+            ${{ env.BUILD_CRATE_JS }}
           if-no-files-found: error
   test-macOS-windows-binding:
     name: Test bindings on ${{ matrix.settings.target }} - node@${{ matrix.node }}
@@ -481,7 +486,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-universal-apple-darwin
-          path: ${{ env.BUILD_CRATE_OUTPUT }}
+          path: |
+            ${{ env.BUILD_CRATE_BIN }}
+            ${{ env.BUILD_CRATE_JS }}
           if-no-files-found: error
   publish:
     name: Publish
