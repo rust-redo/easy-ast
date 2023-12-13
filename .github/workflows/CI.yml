@@ -188,13 +188,15 @@ jobs:
           usesh: true
           mem: 3000
           prepare: |
-            pkg install -y -f curl node libnghttp2 npm
+            pkg install -y -f curl node libnghttp2 npm git
             curl https://sh.rustup.rs -sSf --output rustup.sh
             sh rustup.sh -y --profile minimal --default-toolchain beta
             export PATH="/usr/local/cargo/bin:$PATH"
             npm i -g pnpm
             echo "~~~~ rustc --version ~~~~"
             rustc --version
+            echo "~~~~ git --version ~~~~"
+            git --version
             echo "~~~~ node -v ~~~~"
             node -v
             echo "~~~~ pnpm --version ~~~~"
