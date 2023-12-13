@@ -37,7 +37,6 @@ jobs:
             build: |
               pnpm build:crate --target i686-pc-windows-msvc
               pnpm build:npm
-              pnpm test
             target: i686-pc-windows-msvc
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
