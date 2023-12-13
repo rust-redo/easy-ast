@@ -28,11 +28,8 @@ jobs:
           - host: macos-latest
             target: x86_64-apple-darwin
             build: |
-              pnpm repos
               pnpm build
               strip -x packages/**/*.node
-              pnpm test
-              pnpm test:git
           - host: windows-latest
             build: pnpm build
             target: x86_64-pc-windows-msvc
@@ -254,6 +251,8 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm i -g npm && pnpm install
+      - name: Load third-party repos
+        run: pnpm repos
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -263,7 +262,7 @@ jobs:
         run: ls -R .
         shell: bash
       - name: Test bindings
-        run: pnpm test
+        run: pnpm test && pnpm test:git
   test-linux-x64-gnu-binding:
     name: Test bindings on Linux-x64-gnu - node@${{ matrix.node }}
     needs:
