@@ -1,7 +1,7 @@
 name: CI
 env:
   DEBUG: napi:*
-  BIN_PATH: packages/**/*.node
+  BIN_PATH: ./*packages/**/*.node
   MACOSX_DEPLOYMENT_TARGET: '10.13'
 permissions:
   contents: write
@@ -257,7 +257,7 @@ jobs:
           name: bindings-${{ matrix.settings.target }}
           path: .
       - name: List packages
-        run: ls -R .
+        run: ls -R packages/**/*.node
         shell: bash
       - name: Test bindings
         run: pnpm test && pnpm test:git
@@ -291,7 +291,7 @@ jobs:
           name: bindings-x86_64-unknown-linux-gnu
           path: .
       - name: List packages
-        run: ls -R .
+        run: ls -R packages/**/*.node
         shell: bash
       - name: Test bindings
         run: docker run --rm -v $(pwd):/build -w /build node:${{ matrix.node }}-slim pnpm test
@@ -327,7 +327,7 @@ jobs:
           name: bindings-x86_64-unknown-linux-musl
           path: .
       - name: List packages
-        run: ls -R .
+        run: ls -R packages/**/*.node
         shell: bash
       - name: Test bindings
         run: docker run --rm -v $(pwd):/build -w /build node:${{ matrix.node }}-alpine pnpm test
@@ -350,7 +350,7 @@ jobs:
           name: bindings-aarch64-unknown-linux-gnu
           path: .
       - name: List packages
-        run: ls -R .
+        run: ls -R packages/**/*.node
         shell: bash
       - name: Install dependencies
         run: |
@@ -384,7 +384,7 @@ jobs:
           name: bindings-aarch64-unknown-linux-musl
           path: .
       - name: List packages
-        run: ls -R .
+        run: ls -R packages/**/*.node
         shell: bash
       - name: Install dependencies
         run: |
@@ -423,7 +423,7 @@ jobs:
           name: bindings-armv7-unknown-linux-gnueabihf
           path: .
       - name: List packages
-        run: ls -R .
+        run: ls -R packages/**/*.node
         shell: bash
       - name: Install dependencies
         run: |
