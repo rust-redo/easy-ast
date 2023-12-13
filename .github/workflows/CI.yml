@@ -208,6 +208,7 @@ jobs:
             whoami
             env
             freebsd-version
+            git config --global --add safe.directory '*'
             GITHUB_EVENT_PATH= pnpm install
             GITHUB_EVENT_PATH= pnpm build
             strip -x packages/**/*.node
