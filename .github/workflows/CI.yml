@@ -28,15 +28,14 @@ jobs:
           - host: macos-latest
             target: x86_64-apple-darwin
             build: |
-              pnpm build
+              pnpm build:crate
               strip -x packages/**/*.node
           - host: windows-latest
-            build: pnpm build
+            build: pnpm build:crate
             target: x86_64-pc-windows-msvc
           - host: windows-latest
             build: |
               pnpm build:crate --target i686-pc-windows-msvc
-              pnpm build:npm
             target: i686-pc-windows-msvc
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
@@ -44,17 +43,15 @@ jobs:
             build: |-
               set -e && unset CC_x86_64_unknown_linux_gnu && unset CC &&
               pnpm build:crate --target x86_64-unknown-linux-gnu &&
-              pnpm build:npm &&
               strip -x packages/**/*.node
           - host: ubuntu-latest
             target: x86_64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
-            build: set -e && pnpm build && strip -x packages/**/*.node
+            build: set -e && pnpm build:crate && strip -x packages/**/*.node
           - host: macos-latest
             target: aarch64-apple-darwin
             build: |
               pnpm build:crate --target aarch64-apple-darwin
-              pnpm build:npm
               strip -x packages/**/*.node
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
@@ -65,7 +62,6 @@ jobs:
               rustup target add aarch64-unknown-linux-gnu &&
               export CC_aarch64_unknown_linux_gnu=/usr/aarch64-unknown-linux-gnu/bin/aarch64-unknown-linux-gnu-gcc
               pnpm build:crate --target aarch64-unknown-linux-gnu &&
-              pnpm build:npm &&
               aarch64-unknown-linux-gnu-strip packages/**/*.node
           - host: ubuntu-latest
             target: armv7-unknown-linux-gnueabihf
@@ -74,19 +70,16 @@ jobs:
               sudo apt-get install gcc-arm-linux-gnueabihf -y
             build: |
               pnpm build:crate --target armv7-unknown-linux-gnueabihf
-              pnpm build:npm
               arm-linux-gnueabihf-strip packages/**/*.node
           - host: ubuntu-latest
             target: aarch64-linux-android
             build: |
               pnpm build:crate --target aarch64-linux-android
-              pnpm build:npm
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/**/*.node
           - host: ubuntu-latest
             target: armv7-linux-androideabi
             build: |
               pnpm build:crate --target armv7-linux-androideabi
-              pnpm build:npm
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/**/*.node
           - host: ubuntu-latest
             target: aarch64-unknown-linux-musl
@@ -95,7 +88,6 @@ jobs:
               set -e &&
               rustup target add aarch64-unknown-linux-musl &&
               pnpm build:crate --target aarch64-unknown-linux-musl &&
-              pnpm build:npm
               /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip packages/**/*.node
           - host: windows-latest
             target: aarch64-pc-windows-msvc
@@ -251,6 +243,8 @@ jobs:
         run: pnpm i -g npm && pnpm install
       - name: Load third-party repos
         run: pnpm repos
+      - name: Build JS
+        run: pnpm build:npm
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -285,6 +279,8 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm i -g npm && pnpm install
+      - name: Build JS
+        run: pnpm build:npm
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -321,6 +317,8 @@ jobs:
         run: |
           pnpm config set supportedArchitectures.libc "musl"
           pnpm i -g npm && pnpm install
+      - name: Build JS
+        run: pnpm build:npm
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -357,6 +355,8 @@ jobs:
           pnpm config set supportedArchitectures.cpu "arm64"
           pnpm config set supportedArchitectures.libc "glibc"
           pnpm i -g npm && pnpm install
+      - name: Build JS
+        run: pnpm build:npm
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -391,6 +391,8 @@ jobs:
           pnpm config set supportedArchitectures.cpu "arm64"
           pnpm config set supportedArchitectures.libc "musl"
           pnpm i -g npm && pnpm install
+      - name: Build JS
+        run: pnpm build:npm
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -429,6 +431,8 @@ jobs:
         run: |
           pnpm config set supportedArchitectures.cpu "arm"
           pnpm i -g npm && pnpm install
+      - name: Build JS
+        run: pnpm build:npm
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
