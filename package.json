@@ -10,9 +10,10 @@
     "build:npm": "pnpm --filter \"{packages/**}\" run build:npm",
     "install:test": "cd packages/graph/__test__/fixture/code && npm i",
     "parse": "it",
-    "postinstall": "pnpm repos && pnpm install:test",
+    "postinstall": "pnpm install:test",
     "repos": "node scripts/git-repo.mjs",
-    "test": "pnpm --filter \"{packages/**}\" run test"
+    "test": "pnpm --filter \"{packages/**}\" run test",
+    "test:git": "pnpm --filter \"{packages/**}\" run test:git"
   },
   "keywords": [],
   "author": "",
