@@ -61,8 +61,6 @@ jobs:
             build: |
               pnpm build:crate --target aarch64-apple-darwin
               strip -x packages/**/*.node
-              pnpm build:npm
-              pnpm test
           - host: ubuntu-latest
             target: aarch64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
@@ -71,6 +69,9 @@ jobs:
               export JEMALLOC_SYS_WITH_LG_PAGE=16 &&
               rustup target add aarch64-unknown-linux-gnu &&
               export CC_aarch64_unknown_linux_gnu=/usr/aarch64-unknown-linux-gnu/bin/aarch64-unknown-linux-gnu-gcc
+              pnpm config set supportedArchitectures.cpu "arm64" &&
+              pnpm config set supportedArchitectures.libc "glibc" &&
+              pnpm i &&
               pnpm build:crate --target aarch64-unknown-linux-gnu &&
               aarch64-unknown-linux-gnu-strip packages/**/*.node &&
               pnpm build:npm &&
@@ -81,6 +82,8 @@ jobs:
               sudo apt-get update
               sudo apt-get install gcc-arm-linux-gnueabihf -y
             build: |
+              pnpm config set supportedArchitectures.cpu "arm"
+              pnpm i
               pnpm build:crate --target armv7-unknown-linux-gnueabihf
               arm-linux-gnueabihf-strip packages/**/*.node
               pnpm build:npm
@@ -90,21 +93,20 @@ jobs:
             build: |
               pnpm build:crate --target aarch64-linux-android
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/**/*.node
-              pnpm build:npm
-              pnpm test
           - host: ubuntu-latest
             target: armv7-linux-androideabi
             build: |
               pnpm build:crate --target armv7-linux-androideabi
               ${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip packages/**/*.node
-              pnpm build:npm
-              pnpm test
           - host: ubuntu-latest
             target: aarch64-unknown-linux-musl
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             build: |-
               set -e &&
               rustup target add aarch64-unknown-linux-musl &&
+              pnpm config set supportedArchitectures.cpu "arm64" &&
+              pnpm config set supportedArchitectures.libc "musl" &&
+              pnpm i &&
               pnpm build:crate --target aarch64-unknown-linux-musl &&
               /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip packages/**/*.node &&
               pnpm build:npm && 
@@ -113,9 +115,10 @@ jobs:
             target: aarch64-pc-windows-msvc
             build: |
               pnpm build:crate --target aarch64-pc-windows-msvc
-              pnpm build:npm
-              pnpm test
-    name: stable - ${{ matrix.settings.target }} - node@18
+        node:
+          - '18'
+          - '20'
+    name: stable - ${{ matrix.settings.target }} - node@${{ matrix.node }}
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@v3
@@ -126,7 +129,7 @@ jobs:
         uses: actions/setup-node@v3
         if: ${{ !matrix.settings.docker }}
         with:
-          node-version: 18
+          node-version: ${{ matrix.node }}
           check-latest: true
           cache: pnpm
       - name: Install
@@ -163,7 +166,7 @@ jobs:
         uses: actions/setup-node@v3
         if: matrix.settings.target == 'i686-pc-windows-msvc'
         with:
-          node-version: 18
+          node-version: ${{ matrix.node }}
           check-latest: true
           cache: pnpm
           architecture: x86
