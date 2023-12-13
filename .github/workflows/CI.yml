@@ -211,9 +211,9 @@ jobs:
             GITHUB_EVENT_PATH= pnpm build
             strip -x packages/**/*.node
             GITHUB_EVENT_PATH= pnpm test
-            rm -rf **/node_modules
-            rm -rf **/target
-            rm -rf .pnpm/cache
+            rm -rf ./**/node_modules
+            rm -rf ./**/target
+            echo "~~~~ wait to upload ~~~~"
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
