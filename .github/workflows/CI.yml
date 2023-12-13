@@ -1,7 +1,7 @@
 name: CI
 env:
   DEBUG: napi:*
-  BIN_PATH: ./*packages/**/*.node
+  BUILD_CRATE_OUTPUT: ./*packages/**/{*.node,core.*}
   MACOSX_DEPLOYMENT_TARGET: '10.13'
 permissions:
   contents: write
@@ -159,7 +159,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-${{ matrix.settings.target }}
-          path: ${{ env.BIN_PATH }}
+          path: ${{ env.BUILD_CRATE_OUTPUT }}
           if-no-files-found: error
   build-freebsd:
     runs-on: macos-12
@@ -210,7 +210,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-freebsd
-          path: ${{ env.BIN_PATH }}
+          path: ${{ env.BUILD_CRATE_OUTPUT }}
           if-no-files-found: error
   test-macOS-windows-binding:
     name: Test bindings on ${{ matrix.settings.target }} - node@${{ matrix.node }}
@@ -250,8 +250,8 @@ jobs:
         with:
           name: bindings-${{ matrix.settings.target }}
           path: .
-      - name: List packages
-        run: ls -R packages/**/*.node
+      - name: List build:crate
+        run: ls -R ./*packages/**/{*.node,core.*}
         shell: bash
       - name: Test bindings
         run: pnpm test && pnpm test:git
@@ -286,8 +286,8 @@ jobs:
         with:
           name: bindings-x86_64-unknown-linux-gnu
           path: .
-      - name: List packages
-        run: ls -R packages/**/*.node
+      - name: List build:crate
+        run: ls -R ./*packages/**/{*.node,core.*}
         shell: bash
       - name: Test bindings
         run: docker run --rm -v $(pwd):/build -w /build node:${{ matrix.node }}-slim pnpm test
@@ -324,8 +324,8 @@ jobs:
         with:
           name: bindings-x86_64-unknown-linux-musl
           path: .
-      - name: List packages
-        run: ls -R packages/**/*.node
+      - name: List build:crate
+        run: ls -R ./*packages/**/{*.node,core.*}
         shell: bash
       - name: Test bindings
         run: docker run --rm -v $(pwd):/build -w /build node:${{ matrix.node }}-alpine pnpm test
@@ -347,8 +347,8 @@ jobs:
         with:
           name: bindings-aarch64-unknown-linux-gnu
           path: .
-      - name: List packages
-        run: ls -R packages/**/*.node
+      - name: List build:crate
+        run: ls -R ./*packages/**/{*.node,core.*}
         shell: bash
       - name: Install dependencies
         run: |
@@ -383,8 +383,8 @@ jobs:
         with:
           name: bindings-aarch64-unknown-linux-musl
           path: .
-      - name: List packages
-        run: ls -R packages/**/*.node
+      - name: List build:crate
+        run: ls -R ./*packages/**/{*.node,core.*}
         shell: bash
       - name: Install dependencies
         run: |
@@ -424,8 +424,8 @@ jobs:
         with:
           name: bindings-armv7-unknown-linux-gnueabihf
           path: .
-      - name: List packages
-        run: ls -R packages/**/*.node
+      - name: List build:crate
+        run: ls -R ./*packages/**/{*.node,core.*}
         shell: bash
       - name: Install dependencies
         run: |
@@ -481,7 +481,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bindings-universal-apple-darwin
-          path: ${{ env.BIN_PATH }}
+          path: ${{ env.BUILD_CRATE_OUTPUT }}
           if-no-files-found: error
   publish:
     name: Publish
