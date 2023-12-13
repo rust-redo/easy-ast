@@ -1,6 +1,7 @@
 name: CI
 env:
   DEBUG: napi:*
+  BIN_PATH: packages/**/*.node
   MACOSX_DEPLOYMENT_TARGET: '10.13'
 permissions:
   contents: write
