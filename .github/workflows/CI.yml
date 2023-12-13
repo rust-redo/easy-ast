@@ -43,7 +43,7 @@ jobs:
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
             build: |-
-              set -e &&
+              set -e && unset CC_x86_64_unknown_linux_gnu && unset CC &&
               pnpm build:crate --target x86_64-unknown-linux-gnu &&
               pnpm build:npm &&
               strip -x $BIN_PATH
