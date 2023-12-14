@@ -1,7 +1,5 @@
 #![deny(clippy::all)]
 
-use std::str::Split;
-
 use easy_ast_resolver::{Alias, AliasValue, ModuleResolver};
 use napi::bindgen_prelude::Buffer;
 

@@ -50,12 +50,12 @@
   },
   "scripts": {
     "artifacts": "napi artifacts",
-    "build": "napi build --platform --release --dts core.d.ts --js core.js && tsc",
+    "build:crate": "napi build --platform --release --dts core.d.ts --js core.js",
+    "build:npm": "tsc",
     "build:debug": "napi build --platform",
     "prepublishOnly": "napi prepublish -t npm",
-    "test:mock": "ava  --config ./ava.config.mjs",
+    "test": "ava  --config ./ava.config.mjs",
     "test:git": "ava --config ./ava.config.git.mjs",
-    "test": "npm run test:mock && npm run test:git",
     "universal": "napi universal",
     "version": "napi version"
   }
