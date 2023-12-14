@@ -34,10 +34,15 @@ jobs:
               strip -x packages/**/*.node
               pnpm test && pnpm test:git
           - host: windows-latest
-            build: pnpm build:crate
+            build: |
+              pnpm i -g npm
+              pnpm repos
+              pnpm build
+              pnpm test && pnpm test:git
             target: x86_64-pc-windows-msvc
           - host: windows-latest
             build: |
+              pnpm i -g npm
               pnpm repos
               pnpm build:crate --target i686-pc-windows-msvc
               pnpm build:npm
