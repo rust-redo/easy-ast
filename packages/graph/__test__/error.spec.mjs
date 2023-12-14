@@ -6,6 +6,7 @@ test('should parse file not found error', (t) => {
   try {
     parser.visit('./error/not-found.js')
   } catch (err) {
+    console.log('------>2222', err)
     t.true(/^EASY_AST_ERR.+failed to resolve foo.js from.+fixture\/code\: No such file or directory/.test(err.message))
   }
 })

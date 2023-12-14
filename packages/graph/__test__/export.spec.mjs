@@ -8,6 +8,7 @@ test('should parse export', (t) => {
     'export.json', 
     {},
   )
+  console.log('---->111', JSON.stringify(parsed))
   const foo = 'nested/foo.js'
   t.truthy(parsed[foo].importer.includes('export.ts'))
   t.truthy(parsed[foo].importer.includes('nested/bar.js'))
