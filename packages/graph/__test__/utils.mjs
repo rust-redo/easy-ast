@@ -10,7 +10,6 @@ export const getCodeFile = (file) => join(__dirname, 'fixture/code', file)
 export const getNodeModules = (file) => join('node_modules', file)
 export const readParsedFile = (file, codeFiles = {}, nodeModules = {}, resolve = true) => {
   let content = readFileSync(join(__dirname, 'fixture/parsed', file)).toString()
-  console.log('------>', content)
   Object.keys(codeFiles).forEach((f) => {
     content = content.replaceAll(`{${f}}`, codeFiles[f])
   })
