@@ -1,4 +1,7 @@
-use std::{path::Path, sync::Arc};
+use std::{
+  path::{Path, PathBuf},
+  sync::Arc,
+};
 
 use easy_ast_error::EasyAstError;
 use oxc_resolver::{ResolveError, ResolveOptions, Resolver};
@@ -7,12 +10,12 @@ pub use oxc_resolver::{Alias, AliasValue};
 
 pub struct ModuleResolver {
   resolver: Resolver,
-  root: Arc<String>,
+  root: Arc<PathBuf>,
   pub should_resolve: bool,
 }
 
 impl ModuleResolver {
-  pub fn new(root: Arc<String>, should_resolve: bool, alias: Arc<Alias>) -> Self {
+  pub fn new(root: Arc<PathBuf>, should_resolve: bool, alias: Arc<Alias>) -> Self {
     Self {
       root,
       should_resolve,
@@ -31,28 +34,31 @@ impl ModuleResolver {
   }
 
   /// return file absolute path based on source
-  pub fn resolve_file(source: &str, file: &str) -> Result<String, EasyAstError> {
+  pub fn resolve_file(source: &PathBuf, file: &str) -> Result<String, EasyAstError> {
     let result = Path::new(source).join(Path::new(file)).canonicalize();
 
     match result {
       Ok(buf) => Ok(buf.to_str().unwrap().to_string()),
       Err(err) => Err(EasyAstError::FileNotFound(format!(
         "failed to resolve {} from {}: {}",
-        file, source, err
+        file,
+        source.to_string_lossy(),
+        err
       ))),
     }
   }
 
   /// return (relative_path, in_root)
   pub fn resolve_relative_root(&self, file: &str) -> (String, bool) {
-    if file.starts_with(self.root.as_ref()) {
-      let mut root_str = self.root.as_ref().to_string();
-      let slash = "/";
-      if !root_str.ends_with(slash) {
-        root_str.push_str(slash)
+    let path_buf = Path::new(file);
+    if path_buf.starts_with(self.root.as_ref()) {
+      let mut path_buf = path_buf.strip_prefix(self.root.as_ref()).unwrap();
+
+      if path_buf.starts_with("/") {
+        path_buf = path_buf.strip_prefix("/").unwrap();
       }
 
-      return (file.replace(&root_str, ""), true);
+      return (path_buf.to_string_lossy().to_string(), true);
     }
 
     return (file.replace("./", ""), file.starts_with("."));
