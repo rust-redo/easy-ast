@@ -102,7 +102,7 @@ impl ModuleResolver {
 
   /// remove \\? in windows
   fn strip_win_prefix(&self, id: String) -> String {
-    if OS == "windows" {
+    if OS != "windows" {
       return id;
     }
 
@@ -116,8 +116,9 @@ impl ModuleResolver {
     id
   }
 
+  /// '\' -> '/'
   fn reverse_backslash(&self, id: String) -> String {
-    if OS == "windows" {
+    if OS != "windows" {
       return id;
     }
 
