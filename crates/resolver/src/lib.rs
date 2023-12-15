@@ -100,14 +100,14 @@ impl ModuleResolver {
     Ok(self.resolve_relative_root(&id))
   }
 
-  /// remove \\? in windows
+  /// remove \\?\ in windows
   fn strip_win_prefix(&self, id: String) -> String {
     if OS != "windows" {
       return id;
     }
 
     let id_path = Path::new(&id);
-    let win_prefix = "\\?";
+    let win_prefix = "\\\\?\\";
 
     if id_path.starts_with(win_prefix) {
       return id.replace(win_prefix, "");
