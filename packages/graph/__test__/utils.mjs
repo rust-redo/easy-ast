@@ -16,6 +16,7 @@ export const readParsedFile = (file, codeFiles = {}, nodeModules = {}, resolve =
   Object.keys(nodeModules).forEach((f) => {
     content = content.replaceAll(`{${f}}`, resolve ? getNodeModules(nodeModules[f]) : nodeModules[f])
   })
+  console.log(content)
   return JSON.parse(content)
 }
 export const parser = new Parser({ root: join(process.cwd(), '__test__/fixture/code') })
