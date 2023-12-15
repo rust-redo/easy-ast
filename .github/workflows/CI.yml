@@ -50,7 +50,6 @@ jobs:
             target: x86_64-unknown-linux-gnu
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian
             build: |-
-              git config --global --add safe.directory /build &&
               set -e && unset CC_x86_64_unknown_linux_gnu && unset CC &&
               pnpm build:crate --target x86_64-unknown-linux-gnu &&
               strip -x packages/**/*.node &&
@@ -61,6 +60,7 @@ jobs:
             docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
             build: |
               set -e
+              git config --global --add safe.directory /build
               pnpm repos 
               pnpm build 
               strip -x packages/**/*.node 
