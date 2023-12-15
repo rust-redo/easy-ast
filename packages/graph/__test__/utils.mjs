@@ -7,7 +7,7 @@ import { Parser } from '../index.js'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export const getCodeFile = (file) => join(__dirname, 'fixture/code', file)
-export const getNodeModules = (file) => join('node_modules', file)
+export const getNodeModules = (file) => join('node_modules', file).replaceAll('\\', '/')
 export const readParsedFile = (file, codeFiles = {}, nodeModules = {}, resolve = true) => {
   let content = readFileSync(join(__dirname, 'fixture/parsed', file)).toString()
   Object.keys(codeFiles).forEach((f) => {
@@ -16,6 +16,7 @@ export const readParsedFile = (file, codeFiles = {}, nodeModules = {}, resolve =
   Object.keys(nodeModules).forEach((f) => {
     content = content.replaceAll(`{${f}}`, resolve ? getNodeModules(nodeModules[f]) : nodeModules[f])
   })
+
   return JSON.parse(content)
 }
 export const parser = new Parser({ root: join(process.cwd(), '__test__/fixture/code') })

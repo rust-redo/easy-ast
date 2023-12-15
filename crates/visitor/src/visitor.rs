@@ -1,22 +1,27 @@
 use easy_ast_error::EasyAstError;
 use easy_ast_resolver::{Alias, ModuleResolver};
 use easy_ast_visitor_import::{ImportNode, ImportNodeKind, ImportVisitor};
-use std::{collections::HashMap, env, sync::Arc};
+use std::{
+  collections::HashMap,
+  env,
+  path::{Path, PathBuf},
+  sync::Arc,
+};
 use swc_parser::SwcParser;
 
 pub struct Visitor {
   swc: SwcParser,
-  root: Arc<String>,
+  root: Arc<PathBuf>,
   alias: Arc<Alias>,
 }
 
 impl Visitor {
-  pub fn new(root: Option<String>, alias: Option<Alias>) -> Visitor {
+  pub fn new(root: Option<PathBuf>, alias: Option<Alias>) -> Visitor {
     Visitor {
       swc: SwcParser::new(),
       root: Arc::new(match root {
         Some(r) => r,
-        _ => env::current_dir().unwrap().to_string_lossy().to_string(),
+        _ => env::current_dir().unwrap(),
       }),
       alias: Arc::new(alias.unwrap_or(vec![])),
     }

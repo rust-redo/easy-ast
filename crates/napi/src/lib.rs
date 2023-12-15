@@ -1,17 +1,19 @@
 #![deny(clippy::all)]
 
+use std::path::PathBuf;
+
 use easy_ast_resolver::{Alias, AliasValue, ModuleResolver};
 use napi::bindgen_prelude::Buffer;
 
-pub fn compute_root(root: Option<Buffer>) -> Option<String> {
+pub fn compute_root(root: Option<Buffer>) -> Option<PathBuf> {
   match root {
-    Some(buf) => Some(String::from_utf8_lossy(&buf).to_string()),
+    Some(buf) => Some(PathBuf::from(String::from_utf8_lossy(&buf).to_string())),
     _ => None,
   }
 }
 
 // alias: module1:path1 module2:path2
-pub fn compute_alias(root: &Option<String>, alias: Option<Buffer>) -> Option<Alias> {
+pub fn compute_alias(root: &Option<PathBuf>, alias: Option<Buffer>) -> Option<Alias> {
   match alias {
     Some(buf) => {
       let alias_str = String::from_utf8_lossy(&buf).to_string();

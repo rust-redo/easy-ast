@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 oxc_resolver = "0.2.0"
 easy_ast_error = { version = "0.1.0", path = "../error" }
+regex = "1.10.2"
