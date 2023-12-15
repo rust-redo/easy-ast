@@ -1,10 +1,11 @@
 use std::{
   path::{Path, PathBuf},
-  sync::Arc,
+  sync::Arc, env::consts::OS,
 };
 
 use easy_ast_error::EasyAstError;
 use oxc_resolver::{ResolveError, ResolveOptions, Resolver};
+use regex::Regex;
 
 pub use oxc_resolver::{Alias, AliasValue};
 
@@ -59,10 +60,16 @@ impl ModuleResolver {
         path_buf = path_buf.strip_prefix("/").unwrap();
       }
 
-      return (path_buf.to_string_lossy().to_string(), true);
+      return (
+        self.reverse_backslash(path_buf.to_string_lossy().to_string()),
+        true,
+      );
     }
 
-    return (file.replace("./", ""), file.starts_with("."));
+    return (
+      self.reverse_backslash(file.replace("./", "")),
+      file.starts_with("."),
+    );
   }
 
   /// return module absolute path based on source
@@ -75,7 +82,7 @@ impl ModuleResolver {
     let source_dir = Path::new(source_dir)
       .parent()
       .unwrap_or_else(|| Path::new("/"));
-    let id = if self.should_resolve {
+    let mut id = if self.should_resolve {
       match self.resolver.resolve(source_dir, request) {
         Ok(res) => res.full_path().to_string_lossy().to_string(),
         Err(err) => match err {
@@ -88,6 +95,33 @@ impl ModuleResolver {
       request.to_owned()
     };
 
+    id = self.strip_win_prefix(id);
+
     Ok(self.resolve_relative_root(&id))
+  }
+
+  /// remove \\? in windows
+  fn strip_win_prefix(&self, id: String) -> String {
+    if OS == "windows" {
+      return id;
+    }
+
+    let id_path = Path::new(&id);
+    let win_prefix = "\\?";
+
+    if id_path.starts_with(win_prefix) {
+      return id.replace(win_prefix, "");
+    }
+
+    id
+  }
+
+  fn reverse_backslash(&self, id: String) -> String {
+    if OS == "windows" {
+      return id;
+    }
+
+    let re = Regex::new(r"\\").unwrap();
+    re.replace_all(&id, "/").to_string()
   }
 }

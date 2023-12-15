@@ -1,7 +1,12 @@
 use easy_ast_error::EasyAstError;
 use easy_ast_resolver::{Alias, ModuleResolver};
 use easy_ast_visitor_import::{ImportNode, ImportNodeKind, ImportVisitor};
-use std::{collections::HashMap, env, sync::Arc, path::{PathBuf, Path}};
+use std::{
+  collections::HashMap,
+  env,
+  path::{Path, PathBuf},
+  sync::Arc,
+};
 use swc_parser::SwcParser;
 
 pub struct Visitor {
