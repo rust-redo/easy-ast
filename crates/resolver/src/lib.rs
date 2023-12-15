@@ -51,6 +51,7 @@ impl ModuleResolver {
   /// return (relative_path, in_root)
   pub fn resolve_relative_root(&self, file: &str) -> (String, bool) {
     let path_buf = Path::new(file);
+    println!("{}\n{}", self.root.to_string_lossy(), file);
     if path_buf.starts_with(self.root.as_ref()) {
       let mut path_buf = path_buf.strip_prefix(self.root.as_ref()).unwrap();
 
