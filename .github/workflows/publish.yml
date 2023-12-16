@@ -238,16 +238,14 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: bindings-x86_64-apple-darwin
-          path: artifacts
       - name: Download macOS arm64 artifact
         uses: actions/download-artifact@v3
         with:
           name: bindings-aarch64-apple-darwin
-          path: artifacts
       - name: List binaries
-        run: ls -R ./
+        run: ls -R packages/**/*.node
       - name: Combine binaries
-        run: pnpm universal
+        run: pnpm universal -d ./
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -278,7 +276,10 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
-          path: artifacts
+          path: .
+      - name: List binaries
+        run: ls -R packages/**/*.node
+        shell: bash
       - name: Move artifacts
         run: pnpm artifacts
       - name: List packages
