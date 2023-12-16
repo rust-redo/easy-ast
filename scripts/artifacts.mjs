@@ -30,6 +30,7 @@ bindings.forEach(async (dir, index) => {
     cmd = [cmd, `mv ${join(dir, 'packages', bin)} ${join('packages', pkg, dir, file)}`].join(' && ')
   }))
 
+  console.log(cmd)
   execSync(cmd, {stdio: 'inherit'})
 
   // move js
@@ -41,6 +42,7 @@ bindings.forEach(async (dir, index) => {
       cmd = [cmd, `mv ${join(dir, 'packages', js)} ${join('packages', pkg, file)}`].join(' && ')
     })
 
+    console.log(cmd)
     execSync(cmd, {stdio: 'inherit'})
   }
 })
