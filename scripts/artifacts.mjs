@@ -1,6 +1,7 @@
 import {join} from 'node:path'
 import {spawn} from 'node:child_process'
 import fg from 'fast-glob'
+import { mkdirSync } from 'node:fs'
 
 const bindings = [
   'bindings-aarch64-apple-darwin',
@@ -25,6 +26,7 @@ bindings.forEach(async (dir, index) => {
   let cmd = ``
   bins.forEach(bin => {
     const [pkg, file] = bin.split('/')
+    mkdirSync(join('packages', pkg, dir))
     cmd = [cmd, `mv ${join(dir, 'packages', bin)} ${join('packages', pkg, dir, file)}`].join('&&')
   })
 
