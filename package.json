@@ -22,6 +22,7 @@
   "license": "ISC",
   "devDependencies": {
     "debug": "^4.3.1",
+    "fast-glob": "^3.3.2",
     "simple-git": "^3.20.0"
   }
 }
