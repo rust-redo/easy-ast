@@ -23,7 +23,7 @@ const bindings = [
 bindings.forEach(async (dir, index) => {
   // move binaries
   const bins = await fg('**/*.node', {cwd: join(dir, './packages')})
-  let cmd = ``
+  let cmd = `echo "mv bins"`
   bins.forEach(bin => {
     const [pkg, file] = bin.split('/')
     mkdirSync(join('packages', pkg, dir))
@@ -34,8 +34,8 @@ bindings.forEach(async (dir, index) => {
 
   // move js
   if(index === 0) {
-    const jss = await fg('**/core.*', {cwd: join(dir, './packages')})
-    cmd = ''
+    const jss = await fg('**/core.*', {cwd: (dir, './packages')})
+    cmd = `echo "mv js"`
     jss.forEach(js => {
       const [pkg, file] = js.split('/')
       cmd = [cmd, `mv ${join(dir, 'packages', js)} ${join('packages', pkg, file)}`].join(' && ')
