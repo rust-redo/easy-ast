@@ -1,5 +1,5 @@
 import {join} from 'node:path'
-import {spawn} from 'node:child_process'
+import {execSync} from 'node:child_process'
 import fg from 'fast-glob'
 import { mkdirSync } from 'node:fs'
 
@@ -23,24 +23,24 @@ const bindings = [
 bindings.forEach(async (dir, index) => {
   // move binaries
   const bins = await fg('**/*.node', {cwd: join(dir, './packages')})
-  let cmd = `echo "mv bins"`
+  let cmd = `echo "mv ${dir} bins"`
   bins.forEach(bin => {
     const [pkg, file] = bin.split('/')
     mkdirSync(join('packages', pkg, dir))
     cmd = [cmd, `mv ${join(dir, 'packages', bin)} ${join('packages', pkg, dir, file)}`].join(' && ')
   })
 
-  spawn(cmd, {stdio: 'inherit'})
+  execSync(cmd, {stdio: 'inherit'})
 
   // move js
   if(index === 0) {
     const jss = await fg('**/core.*', {cwd: (dir, './packages')})
-    cmd = `echo "mv js"`
+    cmd = `echo "mv ${dir} js"`
     jss.forEach(js => {
       const [pkg, file] = js.split('/')
       cmd = [cmd, `mv ${join(dir, 'packages', js)} ${join('packages', pkg, file)}`].join(' && ')
     })
 
-    spawn(cmd, {stdio: 'inherit'})
+    execSync(cmd, {stdio: 'inherit'})
   }
 })
