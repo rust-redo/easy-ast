@@ -13,7 +13,9 @@
     "postinstall": "pnpm install:test",
     "repos": "node scripts/git-repo.mjs",
     "test": "pnpm --filter \"{packages/**}\" run test",
-    "test:git": "pnpm --filter \"{packages/**}\" run test:git"
+    "test:git": "pnpm --filter \"{packages/**}\" run test:git",
+    "artifacts": "pnpm --filter \"{packages/**}\" run artifacts",
+    "universal": "pnpm --filter \"{packages/**}\" run universal"
   },
   "keywords": [],
   "author": "",
