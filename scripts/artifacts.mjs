@@ -27,8 +27,8 @@ bindings.forEach(async (dir, index) => {
   await Promise.all(bins.map(async bin => {
     const [pkg, file] = bin.split('/')
     const artifactsDir = join('../packages', pkg, 'artifacts')
-    await createDir(artifactsDir, import.meta.url)
-    await createDir(join(artifactsDir, dir), import.meta.url).catch(err => console.log(err))
+    await createDir(artifactsDir, import.meta.url).catch(() => {})
+    await createDir(join(artifactsDir, dir), import.meta.url).catch(() => {})
     cmd = [cmd, `mv ${join(dir, 'packages', bin)} ${join('packages', pkg, dir, file)}`].join(' && ')
   }))
 
