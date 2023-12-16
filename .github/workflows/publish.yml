@@ -278,7 +278,7 @@ jobs:
         with:
           path: .
       - name: Move artifacts
-        run: node scripts/artifacts.mjs && ls -R **/*.node && pnpm artifacts
+        run: node scripts/artifacts.mjs && ls -R packages/graph/bindings-universal-apple-darwin && pnpm artifacts
       - name: List packages
         run: ls -R packages/**/npm && ls -R packages/*/*.js
         shell: bash
