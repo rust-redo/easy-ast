@@ -29,7 +29,7 @@ bindings.forEach(async (dir, index) => {
     const artifactsDir = join('../packages', pkg, 'artifacts')
     await createDir(artifactsDir, import.meta.url).catch(() => {})
     await createDir(join(artifactsDir, dir), import.meta.url).catch(() => {})
-    cmd = [cmd, `mv ${join(dir, 'packages', bin)} ${join('packages', pkg, dir, file)}`].join(' && ')
+    cmd = [cmd, `mv ${join(dir, 'packages', bin)} ${join('packages', pkg,'artifacts', dir, file)}`].join(' && ')
   }))
 
   console.log(cmd)
