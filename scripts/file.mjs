@@ -17,7 +17,7 @@ export async function exist(file) {
 
 export async function createDir(file, root) {
   const dir = getRealPath(file, root)
-  console.log(dir, await exist(dir))
+
   if (!(await exist(dir))) {
     await mkdir(dir)
   }

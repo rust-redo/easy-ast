@@ -26,7 +26,7 @@ bindings.forEach(async (dir, index) => {
   let cmd = `echo "mv ${dir} bins"`
   await Promise.all(bins.map(async bin => {
     const [pkg, file] = bin.split('/')
-    await createDir(join('../packages', pkg, dir), import.meta.url)
+    await createDir(join('../packages', pkg, dir), import.meta.url).catch(err => console.log(err))
     cmd = [cmd, `mv ${join(dir, 'packages', bin)} ${join('packages', pkg, dir, file)}`].join(' && ')
   }))
 
