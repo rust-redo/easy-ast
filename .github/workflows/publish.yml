@@ -245,7 +245,7 @@ jobs:
           name: bindings-aarch64-apple-darwin
           path: artifacts
       - name: List binaries
-        run: ls -R packages/**/*.node
+        run: ls -R ./
       - name: Combine binaries
         run: pnpm universal
       - name: Upload artifact
