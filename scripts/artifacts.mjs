@@ -27,7 +27,7 @@ bindings.forEach(async (dir, index) => {
   bins.forEach(bin => {
     const [pkg, file] = bin.split('/')
     mkdirSync(join('packages', pkg, dir))
-    cmd = [cmd, `mv ${join(dir, 'packages', bin)} ${join('packages', pkg, dir, file)}`].join('&&')
+    cmd = [cmd, `mv ${join(dir, 'packages', bin)} ${join('packages', pkg, dir, file)}`].join(' && ')
   })
 
   spawn(cmd, {stdio: 'inherit'})
@@ -38,7 +38,7 @@ bindings.forEach(async (dir, index) => {
     cmd = ''
     jss.forEach(js => {
       const [pkg, file] = js.split('/')
-      cmd = [cmd, `mv ${join(dir, 'packages', js)} ${join('packages', pkg, file)}`].join('&&')
+      cmd = [cmd, `mv ${join(dir, 'packages', js)} ${join('packages', pkg, file)}`].join(' && ')
     })
 
     spawn(cmd, {stdio: 'inherit'})
