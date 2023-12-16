@@ -15,7 +15,8 @@
     "test": "pnpm --filter \"{packages/**}\" run test",
     "test:git": "pnpm --filter \"{packages/**}\" run test:git",
     "artifacts": "pnpm --filter \"{packages/**}\" run artifacts",
-    "universal": "pnpm --filter \"{packages/**}\" run universal"
+    "universal": "pnpm --filter \"{packages/**}\" run universal",
+    "prepublishOnly": "pnpm --filter \"{packages/**}\" run prepublishOnly"
   },
   "keywords": [],
   "author": "",
