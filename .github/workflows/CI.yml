@@ -1,8 +1,6 @@
 name: CI
 env:
   DEBUG: napi:*
-  BUILD_CRATE_BIN: ./*packages/**/*.node
-  BUILD_CRATE_JS: ./*packages/**/core.*
   MACOSX_DEPLOYMENT_TARGET: '10.13'
 permissions:
   contents: write
@@ -176,14 +174,6 @@ jobs:
         run: ${{ matrix.settings.build }}
         if: ${{ !matrix.settings.docker }}
         shell: bash
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: bindings-${{ matrix.settings.target }}
-          path: |
-            ${{ env.BUILD_CRATE_BIN }}
-            ${{ env.BUILD_CRATE_JS }}
-          if-no-files-found: error
   build-freebsd:
     runs-on: ubuntu-latest
     name: Build FreeBSD
@@ -216,7 +206,6 @@ jobs:
           run: |
             export PATH="/usr/local/cargo/bin:$PATH"
             pwd
-            ls -lah
             whoami
             env
             freebsd-version
@@ -224,14 +213,3 @@ jobs:
             GITHUB_EVENT_PATH= pnpm build
             strip -x packages/**/*.node
             GITHUB_EVENT_PATH= pnpm test
-            rm -rf ./**/node_modules
-            rm -rf ./**/target
-            echo "~~~~ wait to upload ~~~~"
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: bindings-freebsd
-          path: |
-            ${{ env.BUILD_CRATE_BIN }}
-            ${{ env.BUILD_CRATE_JS }}
-          if-no-files-found: error
