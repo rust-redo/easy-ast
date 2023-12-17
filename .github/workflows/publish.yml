@@ -1,4 +1,4 @@
-name: CI
+name: Publish
 env:
   DEBUG: napi:*
   BUILD_CRATE_BIN: ./*packages/**/*.node
