@@ -17,6 +17,9 @@
     "bundler",
     "easy-ast"
   ],
+  "repository": {
+    "url": "https://github.com/rust-redo/easy-ast"
+  },
   "napi": {
     "name": "easy-ast.graph",
     "triples": {

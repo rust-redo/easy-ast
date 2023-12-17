@@ -7,6 +7,9 @@
   "cpu": [
     "x64"
   ],
+  "repository": {
+    "url": "https://github.com/rust-redo/easy-ast"
+  },
   "main": "easy-ast.graph.win32-x64-msvc.node",
   "files": [
     "easy-ast.graph.win32-x64-msvc.node"
