@@ -13,13 +13,17 @@
     "postinstall": "pnpm install:test",
     "repos": "node scripts/git-repo.mjs",
     "test": "pnpm --filter \"{packages/**}\" run test",
-    "test:git": "pnpm --filter \"{packages/**}\" run test:git"
+    "test:git": "pnpm --filter \"{packages/**}\" run test:git",
+    "artifacts": "pnpm --filter \"{packages/**}\" run artifacts",
+    "universal": "pnpm --filter \"{packages/**}\" run universal",
+    "prepublishOnly": "pnpm --filter \"{packages/**}\" run prepublishOnly"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "debug": "^4.3.1",
+    "fast-glob": "^3.3.2",
     "simple-git": "^3.20.0"
   }
 }
