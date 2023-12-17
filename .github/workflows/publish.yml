@@ -282,10 +282,10 @@ jobs:
         shell: bash
       - name: Publish
         run: |
-          pnpm config set provenance true
+          npm config set provenance true
+          npm config set access public
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-          pnpm prepublishOnly
-          pnpm publish --access public
+          pnpm publish -r --filter "{packages/**}" --access public
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
