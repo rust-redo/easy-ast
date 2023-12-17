@@ -280,6 +280,8 @@ jobs:
       - name: List packages
         run: ls -R packages/**/npm && ls -R packages/*/*.js
         shell: bash
+      - name: Build JS
+        run: pnpm build:npm
       - name: Publish
         run: |
           npm config set provenance true
