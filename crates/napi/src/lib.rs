@@ -18,6 +18,7 @@ pub fn compute_alias(root: &Option<PathBuf>, alias: Option<Buffer>) -> Option<Al
     Some(buf) => {
       let alias_str = String::from_utf8_lossy(&buf).to_string();
       let alias: Alias = alias_str
+        .trim()
         .split(" ")
         .map(|s| {
           let kv: Vec<&str> = s.split(":").collect();

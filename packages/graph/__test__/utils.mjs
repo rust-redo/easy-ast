@@ -19,7 +19,8 @@ export const readParsedFile = (file, codeFiles = {}, nodeModules = {}, resolve =
 
   return JSON.parse(content)
 }
-export const parser = new Parser({ root: join(process.cwd(), '__test__/fixture/code') })
+export const createParser = (alias) => new Parser({ root: join(process.cwd(), '__test__/fixture/code'), alias })
+export const parser = createParser()
 export const getGitRepo = repo => join(__dirname, '../../../repos', repo)
 export const getGitRepoFiles = (repo, pattern, ignore) => {
   const root = getGitRepo(repo)

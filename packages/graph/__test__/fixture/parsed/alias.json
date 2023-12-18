@@ -1,0 +1,83 @@
+{
+  "nested/foo.js": {
+    "id": "nested/foo.js",
+    "type": "internal",
+    "importer": [
+      "alias.js",
+      "nested/bar.js"
+    ],
+    "import": null
+  },
+  "alias.js": {
+    "id": "alias.js",
+    "type": "internal",
+    "importer": null,
+    "import": [
+      {
+        "id": "fs",
+        "type": "static",
+        "ident": [
+          {
+            "name": "read",
+            "as": "read",
+            "isType": false
+          }
+        ],
+        "typeOnly": false
+      },
+      {
+        "id": "nested/foo.js",
+        "type": "static",
+        "ident": [
+          {
+            "name": "foo",
+            "as": "foo",
+            "isType": false
+          }
+        ],
+        "typeOnly": false
+      },
+      {
+        "id": "nested/bar.js",
+        "type": "static",
+        "ident": [
+          {
+            "name": "bar",
+            "as": "bar",
+            "isType": false
+          }
+        ],
+        "typeOnly": false
+      }
+    ]
+  },
+  "fs": {
+    "id": "fs",
+    "type": "builtin",
+    "importer": [
+      "alias.js"
+    ],
+    "import": null
+  },
+  "nested/bar.js": {
+    "id": "nested/bar.js",
+    "type": "internal",
+    "importer": [
+      "alias.js"
+    ],
+    "import": [
+      {
+        "id": "nested/foo.js",
+        "type": "static",
+        "ident": [
+          {
+            "name": "foo",
+            "as": "foo",
+            "isType": false
+          }
+        ],
+        "typeOnly": false
+      }
+    ]
+  }
+}
