@@ -3,7 +3,7 @@ import {createParser, readParsedFile} from './utils.mjs'
 
 
 test('should parse alias path', async (t) => {
-  const parser = createParser({'@nested': 'nested'})
+  const parser = createParser({'@pkg': './nested'})
 
   await parser.visit('./alias.js')
   const parsed = parser.parse()

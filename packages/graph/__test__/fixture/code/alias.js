@@ -1,3 +1,3 @@
 import {read} from 'fs'
-import {foo} from '@nested/foo'
-export {bar} from '@nested/bar'
+import {foo} from '@pkg/foo'
+export {bar} from '@pkg/bar'
