@@ -39,7 +39,7 @@ export class Parser {
         Object
           .keys(alias)
           .reduce(
-            (s, key) => [s, `${key}:${
+            (s, key) => [s, `${key}=${
               isAbsolute(alias[key]) ? alias[key] : resolve(absRoot, alias[key])
             }`].join(' '), 
             ''

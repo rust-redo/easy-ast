@@ -12,7 +12,7 @@ pub fn compute_root(root: Option<Buffer>) -> Option<PathBuf> {
   }
 }
 
-// alias: module1:path1 module2:path2
+// alias: name1=path1 name2=path2
 pub fn compute_alias(root: &Option<PathBuf>, alias: Option<Buffer>) -> Option<Alias> {
   match alias {
     Some(buf) => {
@@ -21,8 +21,7 @@ pub fn compute_alias(root: &Option<PathBuf>, alias: Option<Buffer>) -> Option<Al
         .trim()
         .split(" ")
         .map(|s| {
-          let kv: Vec<&str> = s.split(":").collect();
-          println!("{:?}", kv);
+          let kv: Vec<&str> = s.split("=").collect();
           let paths: Vec<AliasValue> = kv[1]
             .split(",")
             .map(|p| {
