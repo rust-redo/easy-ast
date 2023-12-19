@@ -8,6 +8,7 @@ test('should parse alias path', async (t) => {
   await parser.visit('./alias.js')
   const parsed = parser.parse()
   const expected = readParsedFile('./alias.json')
+  console.log(JSON.stringify(parsed))
   const foo = 'nested/foo.js'
   t.truthy(parsed[foo].importer.includes('nested/bar.js'))
   t.truthy(parsed[foo].importer.includes('alias.js'))
