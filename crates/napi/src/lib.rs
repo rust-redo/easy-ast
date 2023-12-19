@@ -22,6 +22,7 @@ pub fn compute_alias(root: &Option<PathBuf>, alias: Option<Buffer>) -> Option<Al
         .split(" ")
         .map(|s| {
           let kv: Vec<&str> = s.split(":").collect();
+          println!("{:?}", kv);
           let paths: Vec<AliasValue> = kv[1]
             .split(",")
             .map(|p| {
