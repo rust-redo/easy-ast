@@ -36,7 +36,14 @@ export class Parser {
     this.parser = new CoreParser(
       Buffer.from(absRoot), 
       alias ? Buffer.from(
-        Object.keys(alias).reduce((s, key) => [s, `${key}:${alias[key]}`].join(' '), '')
+        Object
+          .keys(alias)
+          .reduce(
+            (s, key) => [s, `${key}=${
+              isAbsolute(alias[key]) ? alias[key] : resolve(absRoot, alias[key])
+            }`].join(' '), 
+            ''
+          )
       ) : undefined
     )
   }
