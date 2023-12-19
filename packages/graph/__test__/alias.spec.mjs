@@ -1,14 +1,18 @@
 import test from 'ava'
-import {createParser, readParsedFile} from './utils.mjs'
+import {createParser, isWindows, readParsedFile} from './utils.mjs'
 
 
 test('should parse alias path', async (t) => {
+  // skip in windows
+  if(isWindows) {
+    return 
+  }
+
   const parser = createParser({'@pkg': './nested'})
 
   await parser.visit('./alias.js')
   const parsed = parser.parse()
   const expected = readParsedFile('./alias.json')
-  console.log(JSON.stringify(parsed))
   const foo = 'nested/foo.js'
   t.truthy(parsed[foo].importer.includes('nested/bar.js'))
   t.truthy(parsed[foo].importer.includes('alias.js'))

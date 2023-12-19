@@ -6,6 +6,7 @@ import { Parser } from '../index.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+export const isWindows = /\bwin/.test(process.platform)
 export const getCodeFile = (file) => join(__dirname, 'fixture/code', file)
 export const getNodeModules = (file) => join('node_modules', file).replaceAll('\\', '/')
 export const readParsedFile = (file, codeFiles = {}, nodeModules = {}, resolve = true) => {
