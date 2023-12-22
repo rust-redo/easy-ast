@@ -70,9 +70,12 @@ export class Parser {
     this.parser.visit(Buffer.from(fileArr.toString()), depth, resolve)
   }
 
-  parse() {
-    const parsed = this.parser.parse()
-    return JSON.parse(parsed.toString())
+  parse(): Record<string, ImportNode> {
+    return JSON.parse(this.buffer().toString())
+  }
+
+  buffer() {
+    return this.parser.parse()
   }
 }
 
