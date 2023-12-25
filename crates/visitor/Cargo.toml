@@ -12,3 +12,4 @@ swc_parser = { version = "0.1.0", path = "../swc" }
 easy_ast_error = { version = "0.1.0", path = "../error" }
 easy_ast_visitor_import = { version = "0.1.0", path = "../visitor_import" }
 easy_ast_resolver = { version = "0.1.0", path = "../resolver" }
+easy_ast_visitor_base = { version = "0.1.0", path = "../visitor_base" }

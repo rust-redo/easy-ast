@@ -29,6 +29,14 @@
     ],
     "import": null
   },
+  "nested/baz.js": {
+    "id": "nested/baz.js",
+    "type": "internal",
+    "importer": [
+      "export.ts"
+    ],
+    "import": null
+  },
   "export.ts": {
     "id": "export.ts",
     "type": "internal",
@@ -47,7 +55,7 @@
         "typeOnly": false
       },
       {
-        "id": "nested/bar.js",
+        "id": "nested/baz.js",
         "type": "static",
         "ident": [
           {
