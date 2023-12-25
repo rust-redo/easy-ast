@@ -447,11 +447,8 @@ dependencies = [
 name = "easy_ast_visitor_macros"
 version = "0.1.0"
 dependencies = [
- "easy_ast_error",
- "easy_ast_visitor_base",
  "proc-macro2",
  "quote",
- "swc_parser",
  "syn 2.0.43",
 ]
 

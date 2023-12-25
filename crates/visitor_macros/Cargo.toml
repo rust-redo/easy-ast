@@ -12,6 +12,3 @@ proc-macro = true
 syn = "2.0.43"
 quote = "1.0.33"
 proc-macro2 = "1.0.71"
-swc_parser = { version = "0.1.0", path = "../swc" }
-easy_ast_error = { version = "0.1.0", path = "../error" }
-easy_ast_visitor_base = { version = "0.1.0", path = "../visitor_base" }
