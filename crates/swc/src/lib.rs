@@ -10,12 +10,12 @@ use swc_core::{
     ast::EsVersion,
     parser::Syntax,
     transforms::base::resolver,
-    visit::{VisitMutWith, VisitWith},
+    visit::{VisitMutWith},
   },
 };
 use swc_ecmascript::{
   parser::{EsConfig, TsConfig},
-  visit::Visit,
+  ast::Program,
 };
 
 pub use swc_ecmascript::*;
@@ -45,11 +45,11 @@ impl SwcParser {
   }
 
   /// parse single js file
-  pub fn parse_file(&self, file: &str, visitor: &mut dyn Visit) -> Result<(), EasyAstError> {
+  pub fn load_file(&self, file: &str) -> Result<(Arc<SourceFile>, Program), EasyAstError> {
     let (syntax, is_js, is_ts) = self.get_options(file);
 
     if !is_js {
-      return Ok(());
+      return Err(EasyAstError::InvalidExtension(format!("unsupported file extension of {}", file)));
     }
 
     let fm_result = self.source_map.load_file(Path::new(file));
@@ -65,7 +65,7 @@ impl SwcParser {
 
     // XXX: syntax error is unrecoverable
     let program_result = self.compiler.parse_js(
-      fm,
+      fm.clone(),
       &self.handler,
       EsVersion::latest(),
       syntax,
@@ -80,8 +80,7 @@ impl SwcParser {
     let mut program = program_result.unwrap();
 
     program.visit_mut_with(&mut resolver(Mark::new(), Mark::new(), is_ts));
-    program.visit_with(visitor);
-    Ok(())
+    Ok((fm, program))
   }
 
   /// return (Syntax, is_js, is_ts)

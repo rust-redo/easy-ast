@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use easy_ast_error::EasyAstError;
 use swc_parser::{
+  Span,
   ast::{
     ExportAll, ExportSpecifier, ImportDecl, ImportSpecifier as SwcImportSpecifier,
     ModuleExportName, NamedExport,
