@@ -19,9 +19,10 @@ use swc_ecmascript::{
 };
 
 pub use swc_ecmascript::*;
+pub use swc_core::common::*;
 
 pub struct SwcParser {
-  source_map: Arc<SourceMap>,
+  pub source_map: Arc<SourceMap>,
   handler: Handler,
   compiler: Compiler,
 }

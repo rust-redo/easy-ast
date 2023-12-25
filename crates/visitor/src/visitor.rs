@@ -1,10 +1,11 @@
+use easy_ast_visitor_base::*;
 use easy_ast_error::EasyAstError;
 use easy_ast_resolver::{Alias, ModuleResolver};
-use easy_ast_visitor_import::{ImportNode, ImportNodeKind, ImportVisitor};
+use easy_ast_visitor_import::{ImportNodeKind, ImportVisitor};
 use std::{
   collections::HashMap,
   env,
-  path::{Path, PathBuf},
+  path::{PathBuf},
   sync::Arc,
 };
 use swc_parser::SwcParser;
@@ -80,7 +81,7 @@ impl Visitor {
       if processed_ids.contains_key(&process_id.clone()) == false {
         processed_ids.insert(process_id.clone(), true);
 
-        visitor.set_process_id(process_id.clone());
+        visitor.set_ctx(VisitorContext {process_id: process_id.clone(), source_map: self.swc.source_map.clone()});
         visitor.create_node(process_id.clone());
         self.swc.parse_file(&resolved_file, visitor);
 

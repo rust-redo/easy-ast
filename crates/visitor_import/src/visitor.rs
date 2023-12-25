@@ -10,30 +10,30 @@ use swc_parser::{
 };
 
 use easy_ast_resolver::ModuleResolver;
+use easy_ast_visitor_base::*;
+
+use easy_ast_visitor_macros::{BaseVisitor};
 
 use crate::node::{
   ImportLink, ImportLinkKind, ImportNode, ImportNodeKind, ImportNodeMap, ImportSpecifier,
 };
 
+#[derive(BaseVisitor)]
 pub struct ImportVisitor {
   pub import_node: ImportNodeMap,
-  process_id: Option<Arc<String>>,
   pub resolver: ModuleResolver,
   pub error: Option<EasyAstError>,
+  ctx: Option<VisitorContext>
 }
 
 impl ImportVisitor {
   pub fn new(resolver: ModuleResolver) -> Self {
     Self {
       import_node: ImportNodeMap::new(),
-      process_id: None,
       resolver,
       error: None,
+      ctx: None
     }
-  }
-
-  pub fn set_process_id(&mut self, id: Arc<String>) {
-    self.process_id = Some(id.clone());
   }
 
   /// insert node if not exist
@@ -53,7 +53,7 @@ impl ImportVisitor {
   fn resolve_from_process_id(&mut self, request: &str) -> Option<ImportNode> {
     let module = self
       .resolver
-      .resolve_module(self.process_id.as_ref().unwrap(), request);
+      .resolve_module(&self.ctx.as_ref().unwrap().process_id, request);
 
     if module.is_err() {
       self.error = Some(module.unwrap_err());
@@ -70,7 +70,7 @@ impl ImportVisitor {
   }
 
   fn insert_process_node_depent(&mut self, src: &[u8]) -> Option<(Arc<String>, &mut ImportNode)> {
-    let process_id = self.process_id.clone().unwrap();
+    let process_id = self.ctx.as_ref().unwrap().process_id.clone();
     let module_opt = self.resolve_from_process_id(&String::from_utf8_lossy(src));
 
     if module_opt.is_none() {
