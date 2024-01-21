@@ -1,5 +1,5 @@
 import test from 'ava'
-import {createParser, isWindows, readParsedFile} from './utils.mjs'
+import {createParser, readParsedFile} from './utils.mjs'
 
 
 test('should parse alias path', async (t) => {
