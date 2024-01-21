@@ -3,11 +3,6 @@ import {createParser, isWindows, readParsedFile} from './utils.mjs'
 
 
 test('should parse alias path', async (t) => {
-  // skip in windows
-  if(isWindows) {
-    return t.truthy(true)
-  }
-
   const parser = createParser({'@pkg': './nested'})
 
   await parser.visit('./alias.js')
