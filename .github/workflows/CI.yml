@@ -32,6 +32,7 @@ jobs:
           RUSTUP_HOME: /usr/local/rustup
           CARGO_HOME: /usr/local/cargo
           RUSTUP_IO_THREADS: 1
+          PTHREAD_STACK_MIN: 10485760
         with:
           envs: DEBUG RUSTUP_HOME CARGO_HOME RUSTUP_IO_THREADS
           usesh: true
