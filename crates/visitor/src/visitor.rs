@@ -1,6 +1,6 @@
 use easy_ast_error::EasyAstError;
 use easy_ast_resolver::{Alias, ModuleResolver};
-use easy_ast_visitor_base::*;
+use easy_ast_visitor_context::*;
 use easy_ast_visitor_import::{ImportNodeKind, ImportVisitor};
 use std::{collections::HashMap, env, path::PathBuf, sync::Arc};
 use swc_parser::{SwcParser, visit::VisitWith};
@@ -82,7 +82,7 @@ impl Visitor {
         }
         let (source_file, program) = load_result.unwrap();
 
-        visitor.set_ctx(VisitorContext {
+        visitor.ctx = Some(VisitorContext {
           process_id: process_id.clone(),
           source_map: self.swc.source_map.clone(),
           source_file

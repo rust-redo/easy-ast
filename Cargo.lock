@@ -415,7 +415,7 @@ version = "0.1.0"
 dependencies = [
  "easy_ast_error",
  "easy_ast_resolver",
- "easy_ast_visitor_base",
+ "easy_ast_visitor_context",
  "easy_ast_visitor_import",
  "serde",
  "serde_json",
@@ -423,7 +423,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "easy_ast_visitor_base"
+name = "easy_ast_visitor_context"
 version = "0.1.0"
 dependencies = [
  "easy_ast_error",
@@ -436,20 +436,10 @@ version = "0.1.0"
 dependencies = [
  "easy_ast_error",
  "easy_ast_resolver",
- "easy_ast_visitor_base",
- "easy_ast_visitor_macros",
+ "easy_ast_visitor_context",
  "serde",
  "serde_json",
  "swc_parser",
-]
-
-[[package]]
-name = "easy_ast_visitor_macros"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.43",
 ]
 
 [[package]]

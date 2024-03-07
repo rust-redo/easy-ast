@@ -11,20 +11,17 @@ use swc_parser::{
 };
 
 use easy_ast_resolver::ModuleResolver;
-use easy_ast_visitor_base::*;
-
-use easy_ast_visitor_macros::{BaseVisitor};
+use easy_ast_visitor_context::*;
 
 use crate::node::{
   ImportLink, ImportLinkKind, ImportNode, ImportNodeKind, ImportNodeMap, ImportSpecifier,
 };
 
-#[derive(BaseVisitor)]
 pub struct ImportVisitor {
   pub import_node: ImportNodeMap,
   pub resolver: ModuleResolver,
   pub error: Option<EasyAstError>,
-  ctx: Option<VisitorContext>
+  pub ctx: Option<VisitorContext>
 }
 
 impl ImportVisitor {
@@ -98,7 +95,6 @@ impl Visit for ImportVisitor {
   //     dbg!(&import.local);
   //     dbg!(&import.is_type_only);
   // }
-
   fn visit_import_decl(&mut self, import: &ImportDecl) {
     let opt = self.insert_process_node_depent(&import.src.value.as_bytes());
     if opt.is_none() {
