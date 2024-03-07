@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use easy_ast_error::EasyAstError;
 use swc_parser::{
+  Span,
   ast::{
     ExportAll, ExportSpecifier, ImportDecl, ImportSpecifier as SwcImportSpecifier,
     ModuleExportName, NamedExport,
@@ -10,6 +11,7 @@ use swc_parser::{
 };
 
 use easy_ast_resolver::ModuleResolver;
+use easy_ast_visitor_context::*;
 
 use crate::node::{
   ImportLink, ImportLinkKind, ImportNode, ImportNodeKind, ImportNodeMap, ImportSpecifier,
@@ -17,23 +19,19 @@ use crate::node::{
 
 pub struct ImportVisitor {
   pub import_node: ImportNodeMap,
-  process_id: Option<Arc<String>>,
   pub resolver: ModuleResolver,
   pub error: Option<EasyAstError>,
+  pub ctx: Option<VisitorContext>
 }
 
 impl ImportVisitor {
   pub fn new(resolver: ModuleResolver) -> Self {
     Self {
       import_node: ImportNodeMap::new(),
-      process_id: None,
       resolver,
       error: None,
+      ctx: None
     }
-  }
-
-  pub fn set_process_id(&mut self, id: Arc<String>) {
-    self.process_id = Some(id.clone());
   }
 
   /// insert node if not exist
@@ -53,7 +51,7 @@ impl ImportVisitor {
   fn resolve_from_process_id(&mut self, request: &str) -> Option<ImportNode> {
     let module = self
       .resolver
-      .resolve_module(self.process_id.as_ref().unwrap(), request);
+      .resolve_module(&self.ctx.as_ref().unwrap().process_id, request);
 
     if module.is_err() {
       self.error = Some(module.unwrap_err());
@@ -70,7 +68,7 @@ impl ImportVisitor {
   }
 
   fn insert_process_node_depent(&mut self, src: &[u8]) -> Option<(Arc<String>, &mut ImportNode)> {
-    let process_id = self.process_id.clone().unwrap();
+    let process_id = self.ctx.as_ref().unwrap().process_id.clone();
     let module_opt = self.resolve_from_process_id(&String::from_utf8_lossy(src));
 
     if module_opt.is_none() {
@@ -97,7 +95,6 @@ impl Visit for ImportVisitor {
   //     dbg!(&import.local);
   //     dbg!(&import.is_type_only);
   // }
-
   fn visit_import_decl(&mut self, import: &ImportDecl) {
     let opt = self.insert_process_node_depent(&import.src.value.as_bytes());
     if opt.is_none() {

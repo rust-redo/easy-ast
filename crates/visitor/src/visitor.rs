@@ -1,13 +1,9 @@
 use easy_ast_error::EasyAstError;
 use easy_ast_resolver::{Alias, ModuleResolver};
-use easy_ast_visitor_import::{ImportNode, ImportNodeKind, ImportVisitor};
-use std::{
-  collections::HashMap,
-  env,
-  path::{Path, PathBuf},
-  sync::Arc,
-};
-use swc_parser::SwcParser;
+use easy_ast_visitor_context::*;
+use easy_ast_visitor_import::{ImportNodeKind, ImportVisitor};
+use std::{collections::HashMap, env, path::PathBuf, sync::Arc};
+use swc_parser::{SwcParser, visit::VisitWith};
 
 pub struct Visitor {
   swc: SwcParser,
@@ -80,9 +76,20 @@ impl Visitor {
       if processed_ids.contains_key(&process_id.clone()) == false {
         processed_ids.insert(process_id.clone(), true);
 
-        visitor.set_process_id(process_id.clone());
+        let load_result = self.swc.load_file(&resolved_file);
+        if load_result.is_err() {
+          return Err(load_result.unwrap_err());
+        }
+        let (source_file, program) = load_result.unwrap();
+
+        visitor.ctx = Some(VisitorContext {
+          process_id: process_id.clone(),
+          source_map: self.swc.source_map.clone(),
+          source_file
+        });
         visitor.create_node(process_id.clone());
-        self.swc.parse_file(&resolved_file, visitor);
+
+        program.visit_with(visitor);
 
         for (id, node) in &visitor.import_node.map {
           if processed_ids.contains_key(&id.clone()) || node.kind != ImportNodeKind::Internal {
