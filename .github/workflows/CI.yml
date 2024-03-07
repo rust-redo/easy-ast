@@ -213,5 +213,5 @@ jobs:
             GITHUB_EVENT_PATH= pnpm install
             GITHUB_EVENT_PATH= pnpm build
             strip -x packages/**/*.node
-            ls packages/**/*.node
+            ls -lh packages/**/*.node
             GITHUB_EVENT_PATH= pnpm test
